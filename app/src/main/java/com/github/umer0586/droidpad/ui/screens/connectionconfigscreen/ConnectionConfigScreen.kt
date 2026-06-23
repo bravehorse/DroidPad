@@ -70,6 +70,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -85,6 +86,7 @@ import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
+import com.github.umer0586.droidpad.R
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -150,18 +152,22 @@ fun ConnectionConfigScreenContent(
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    val pleaseEnableBluetooth = stringResource(R.string.please_enable_bluetooth)
+    val bluetoothPermissionRequired = stringResource(R.string.bluetooth_permission_required)
+    val noPairedDevices = stringResource(R.string.no_paired_devices)
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Connection Config") },
+                title = { Text(stringResource(R.string.connection_config)) },
                 navigationIcon = {
                     Icon(
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp)
                             .clickable { onUiEvent(ConnectionConfigScreenEvent.OnBackPress) },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(R.string.back)
                     )
                 }
             )
@@ -182,7 +188,7 @@ fun ConnectionConfigScreenContent(
 
             EnumDropdown<ConnectionType>(
                 selectedValue = uiState.connectionType,
-                label = "Connection Type",
+                label = stringResource(R.string.connection_type),
                 onValueSelected = {onUiEvent(ConnectionConfigScreenEvent.OnConnectionTypeChange(it))}
             )
 
@@ -201,7 +207,7 @@ fun ConnectionConfigScreenContent(
                         singleLine = true,
                         onValueChange = { onUiEvent(ConnectionConfigScreenEvent.OnHostChange(it)) },
                         shape = RoundedCornerShape(50),
-                        label = { Text("Host") },
+                        label = { Text(stringResource(R.string.host)) },
                         isError = uiState.host.isEmpty(),
                         maxLines = 1
                     )
@@ -214,14 +220,14 @@ fun ConnectionConfigScreenContent(
                         onUiEvent(ConnectionConfigScreenEvent.OnPortChange(it))
                     },
                     shape = RoundedCornerShape(50),
-                    label = { Text("Port") },
+                    label = { Text(stringResource(R.string.port)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 if(uiState.connectionType != ConnectionType.UDP && uiState.connectionType != ConnectionType.WEBSOCKET_SERVER) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text("Connection Timeout seconds")
+                        Text(stringResource(R.string.connection_timeout))
                         NumberPicker(
                             value = uiState.connectionTimeout,
                             onValueChange = {
@@ -249,8 +255,8 @@ fun ConnectionConfigScreenContent(
                     modifier = Modifier
                         .width(itemWidth)
                         .padding(horizontal = itemPadding),
-                    headlineContent = { Text("Listen on 0.0.0.0") },
-                    supportingContent = { Text("Listen on all available interfaces") },
+                    headlineContent = { Text(stringResource(R.string.listen_on_all)) },
+                    supportingContent = { Text(stringResource(R.string.listen_on_all_desc)) },
                     trailingContent = {
                         Switch(
                             checked = uiState.listenOnAllInterfaces,
@@ -274,7 +280,7 @@ fun ConnectionConfigScreenContent(
                     singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnClientIdChange(it))},
                     shape = RoundedCornerShape(50),
-                    label = { Text("Client ID") },
+                    label = { Text(stringResource(R.string.client_id)) },
                     isError = uiState.clientId.isEmpty()
                 )
 
@@ -283,7 +289,7 @@ fun ConnectionConfigScreenContent(
                     singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnTopicChange(it))},
                     shape = RoundedCornerShape(50),
-                    label = { Text("Publish Topic") },
+                    label = { Text(stringResource(R.string.publish_topic)) },
                     isError = uiState.topic.isEmpty() || uiState.topic.contains(Regex("\\s+"))
                 )
 
@@ -292,14 +298,14 @@ fun ConnectionConfigScreenContent(
                     singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnFeedTopicChange(it))},
                     shape = RoundedCornerShape(50),
-                    label = { Text("Subscribe Topic") },
+                    label = { Text(stringResource(R.string.subscribe_topic)) },
                     isError = uiState.feedTopic.isEmpty() || uiState.feedTopic.contains(Regex("\\s+"))
                 )
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("Qos")
+                    Text(stringResource(R.string.qos))
                     SingleChoiceSegmentedButtonRow {
                         (0..2).forEachIndexed{ index,qos ->
                             SegmentedButton(
@@ -321,7 +327,7 @@ fun ConnectionConfigScreenContent(
                     modifier = Modifier
                         .width(itemWidth)
                         .padding(horizontal = itemPadding),
-                    headlineContent = { Text("SSL") },
+                    headlineContent = { Text(stringResource(R.string.ssl)) },
                     trailingContent = {
                         Switch(
                             checked = uiState.useSSL,
@@ -358,7 +364,7 @@ fun ConnectionConfigScreenContent(
                     modifier = Modifier
                         .width(itemWidth)
                         .padding(horizontal = itemPadding),
-                    headlineContent = { Text("Use Credentials") },
+                    headlineContent = { Text(stringResource(R.string.use_credentials)) },
                     trailingContent = {
                         Switch(
                             checked = uiState.useCredentials,
@@ -382,11 +388,11 @@ fun ConnectionConfigScreenContent(
                             onUiEvent(ConnectionConfigScreenEvent.OnUsernameChange(it))
                         },
                         shape = RoundedCornerShape(50),
-                        label = { Text("User Name") },
+                        label = { Text(stringResource(R.string.username)) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Person,
-                                contentDescription = "UserName"
+                                contentDescription = null
                             )
                         }
                     )
@@ -403,11 +409,11 @@ fun ConnectionConfigScreenContent(
                             onUiEvent(ConnectionConfigScreenEvent.OnPasswordChange(it))
                         },
                         shape = RoundedCornerShape(50),
-                        label = { Text("Password") },
+                        label = { Text(stringResource(R.string.password)) },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Lock,
-                                contentDescription = "UserName"
+                                contentDescription = null
                             )
                         }
                     )
@@ -424,11 +430,11 @@ fun ConnectionConfigScreenContent(
                         modifier = Modifier
                             .width(itemWidth)
                             .padding(horizontal = itemPadding),
-                        headlineContent = { Text("Bluetooth Permission Required") },
+                        headlineContent = { Text(stringResource(R.string.bluetooth_permission_required)) },
                         leadingContent = {
                             Icon(
                                 imageVector = Icons.Filled.Warning,
-                                contentDescription = "WarningIcon"
+                                contentDescription = null
                             )
                         }
                     )
@@ -443,7 +449,7 @@ fun ConnectionConfigScreenContent(
                     singleLine = true,
                     supportingText = {
                         if(uiState.bluetoothServiceUUID.equals(UUID_SSP, ignoreCase = true))
-                            Text("Serial Port Profile")
+                            Text(stringResource(R.string.serial_port_profile))
                     },
                     onValueChange = {
                         onUiEvent(
@@ -453,7 +459,7 @@ fun ConnectionConfigScreenContent(
                         )
                     },
                     shape = RoundedCornerShape(50),
-                    label = { Text("Service UUID") },
+                    label = { Text(stringResource(R.string.service_uuid)) },
                     isError = uiState.bluetoothServiceUUID.isEmpty()
                 )
 
@@ -463,7 +469,7 @@ fun ConnectionConfigScreenContent(
                     modifier = Modifier
                         .width(itemWidth)
                         .padding(horizontal = itemPadding),
-                    headlineContent = { Text(uiState.selectedBluetoothDevice?.name ?: "No Device Selected") },
+                    headlineContent = { Text(uiState.selectedBluetoothDevice?.name ?: stringResource(R.string.no_device_selected)) },
                     supportingContent = { uiState.selectedBluetoothDevice?.address?.also { Text(it) } },
                     trailingContent = {
                         IconButton(
@@ -472,19 +478,19 @@ fun ConnectionConfigScreenContent(
 
                                 if(!uiState.isBluetoothEnable){
                                     scope.launch {
-                                        snackBarHostState.showSnackbar("Please Enable Bluetooth")
+                                        snackBarHostState.showSnackbar(pleaseEnableBluetooth)
                                     }
                                 }
                                 else if(!uiState.hasBluetoothPermission){
                                     scope.launch {
-                                        snackBarHostState.showSnackbar("Bluetooth Permission Required")
+                                        snackBarHostState.showSnackbar(bluetoothPermissionRequired)
                                     }
                                 }
                                 else if(uiState.pairedBluetoothDevices.isNotEmpty()){
                                     showPairedDevices = true
                                 } else { // when bluetooth is enabled but there are no paired devices
                                     scope.launch {
-                                        snackBarHostState.showSnackbar("No paired devices found")
+                                        snackBarHostState.showSnackbar(noPairedDevices)
                                     }
                                 }
 
@@ -493,7 +499,7 @@ fun ConnectionConfigScreenContent(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.MoreVert,
-                                contentDescription = "Select Device"
+                                contentDescription = null
                             )
                         }
                     }
@@ -537,7 +543,7 @@ fun ConnectionConfigScreenContent(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
-            ) { Text("Save", style = MaterialTheme.typography.titleMedium) }
+            ) { Text(stringResource(R.string.save), style = MaterialTheme.typography.titleMedium) }
         }
 
     }

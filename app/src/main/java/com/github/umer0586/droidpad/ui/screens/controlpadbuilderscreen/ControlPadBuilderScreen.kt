@@ -81,6 +81,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -206,15 +207,15 @@ fun ControlPadBuilderScreenContent(
                 if (showModificationAlert) {
                     AlertDialog(
                         onDismissRequest = { showModificationAlert = false },
-                        title = { Text(text = "Unsaved Changes") },
-                        text = { Text(text = "Interface has been modified") },
+                        title = { Text(text = stringResource(R.string.unsaved_changes)) },
+                        text = { Text(text = stringResource(R.string.interface_modified)) },
                         confirmButton = {
                             TextButton(
                                 onClick = {
                                     showModificationAlert = false
                                     onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
                                 }
-                            ) { Text("Discard Changes") }
+                            ) { Text(stringResource(R.string.discard_changes)) }
                         },
                         dismissButton = {
                             TextButton(
@@ -222,7 +223,7 @@ fun ControlPadBuilderScreenContent(
                                     showModificationAlert = false
                                     onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
                                 }
-                            ) { Text("Save Changes") }
+                            ) { Text(stringResource(R.string.save_changes)) }
                         }
                     )
                 }
@@ -244,7 +245,7 @@ fun ControlPadBuilderScreenContent(
                                 onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
                             },
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "AddIcon",
+                            contentDescription = stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
@@ -263,7 +264,7 @@ fun ControlPadBuilderScreenContent(
                         content = {
                             Icon(
                                 imageVector = Icons.Filled.Add,
-                                contentDescription = "AddIcon"
+                                contentDescription = null
                             )
                         }
                     )
@@ -274,7 +275,7 @@ fun ControlPadBuilderScreenContent(
                         content = {
                             Icon(
                                 imageVector = Icons.Filled.Settings,
-                                contentDescription = "AidsIcon"
+                                contentDescription = null
                             )
                         }
                     )
@@ -285,7 +286,7 @@ fun ControlPadBuilderScreenContent(
                         content = {
                             Icon(
                                 imageVector = Icons.Filled.Done,
-                                contentDescription = "SaveIcon"
+                                contentDescription = null
                             )
                         }
                     )
@@ -365,7 +366,7 @@ fun ControlPadBuilderScreenContent(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Please Wait...")
+                    Text(text = stringResource(R.string.please_wait))
                     Spacer(modifier = Modifier.height(20.dp))
                     LinearProgressIndicator()
                 }
@@ -766,21 +767,21 @@ fun ControlPadBuilderScreenContent(
             if (uiState.showDeleteConfirmation && uiState.itemToBeDeleted != null) {
                 AlertDialog(
                     onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest) },
-                    title = { Text(text = "Delete Item?") },
-                    text = { Text(text = "${uiState.itemToBeDeleted.itemType} will be removed") },
+                    title = { Text(text = stringResource(R.string.delete_item_confirm)) },
+                    text = { Text(text = stringResource(R.string.item_will_be_removed, uiState.itemToBeDeleted.itemType.name)) },
                     confirmButton = {
                         TextButton(
                             onClick = {
                                 onUiEvent(ControlPadBuilderScreenEvent.OnDeleteItemConfirm)
                             }
-                        ) { Text("Delete") }
+                        ) { Text(stringResource(R.string.delete)) }
                     },
                     dismissButton = {
                         TextButton(
                             onClick = {
                                 onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest)
                             }
-                        ) { Text("Cancel") }
+                        ) { Text(stringResource(R.string.cancel)) }
                     }
                 )
             }
@@ -803,7 +804,7 @@ fun ControlPadBuilderScreenContent(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Scale ${selectedItem.itemIdentifier}: ${"%.2f".format(selectedItem.scale)}",
+                                text = stringResource(R.string.scale_item, selectedItem.itemIdentifier, selectedItem.scale),
                                 style = MaterialTheme.typography.labelMedium
                             )
                             Slider(
@@ -1053,10 +1054,10 @@ fun EditorAidsBottomSheetContent(
     ) {
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Enable Angle Snap") },
+            headlineContent = { Text(text = stringResource(R.string.enable_angle_snap)) },
             supportingContent = {
                 Text(
-                    text = "Snap to specific angle automatically",
+                    text = stringResource(R.string.angle_snap_desc),
                     style = MaterialTheme.typography.labelSmall
                 )
             },
@@ -1083,7 +1084,7 @@ fun EditorAidsBottomSheetContent(
                 },
                 supportingContent = {
                     val angle = 360f / uiState.angleSnapDivision
-                    Text("Snap per ${"%.2f".format(angle)}°(360/${uiState.angleSnapDivision})")
+                    Text(stringResource(R.string.snap_per_angle, angle, uiState.angleSnapDivision))
                 },
             )
 
@@ -1091,10 +1092,10 @@ fun EditorAidsBottomSheetContent(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Enable Grid Snap") },
+            headlineContent = { Text(text = stringResource(R.string.enable_grid_snap)) },
             supportingContent = {
                 Text(
-                    text = "Snap to grid automatically",
+                    text = stringResource(R.string.grid_snap_desc),
                     style = MaterialTheme.typography.labelSmall
                 )
             },
@@ -1121,7 +1122,7 @@ fun EditorAidsBottomSheetContent(
                     )
                 },
                 supportingContent = {
-                    Text("Grid size: ${uiState.gridSize.toInt()} dp")
+                    Text(stringResource(R.string.grid_size, uiState.gridSize.toInt()))
                 },
             )
 
@@ -1129,7 +1130,7 @@ fun EditorAidsBottomSheetContent(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Base Unit Size") },
+            headlineContent = { Text(text = stringResource(R.string.base_unit_size)) },
             supportingContent = {
                 Column {
                     Slider(
@@ -1140,7 +1141,7 @@ fun EditorAidsBottomSheetContent(
                         }
                     )
                     Text(
-                        text = "Scale base unit (${uiState.baseUnit.toInt()} dp)",
+                        text = stringResource(R.string.scale_base_unit, uiState.baseUnit.toInt()),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -1149,7 +1150,7 @@ fun EditorAidsBottomSheetContent(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Boundary Margin") },
+            headlineContent = { Text(text = stringResource(R.string.boundary_margin)) },
             supportingContent = {
                 Column {
                     Slider(
@@ -1158,7 +1159,7 @@ fun EditorAidsBottomSheetContent(
                         onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnBoundaryMarginChange(it)) }
                     )
                     Text(
-                        text = "Margin: ${uiState.boundaryMargin.toInt()} px",
+                        text = stringResource(R.string.margin_px, uiState.boundaryMargin.toInt()),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -1167,10 +1168,10 @@ fun EditorAidsBottomSheetContent(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Show Controls") },
+            headlineContent = { Text(text = stringResource(R.string.show_controls)) },
             supportingContent = {
                 Text(
-                    text = "Show Item controls",
+                    text = stringResource(R.string.show_item_controls),
                     style = MaterialTheme.typography.labelSmall
                 )
             },

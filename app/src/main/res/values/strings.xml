@@ -1,3 +1,147 @@
 <resources>
     <string name="app_name">Droid Pad</string>
+    <string name="back">Back</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="update">Update</string>
+    <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="name">Name</string>
+    <string name="url">Url</string>
+    <string name="download">Download</string>
+    <string name="menu">Menu</string>
+    <string name="preferences">Preferences</string>
+    <string name="about">About</string>
+    <string name="share">Share</string>
+    <string name="exit">Exit</string>
+    <string name="import_json">Import Json</string>
+    <string name="import_from_file">Import From File</string>
+    <string name="import_from_link">Import From Link</string>
+    <string name="no_file_picker">No file picker app found for Json files</string>
+    <string name="control_pads">Control Pads</string>
+    <string name="no_control_pads">No control pads found</string>
+    <string name="delete_control_pad">Delete Control Pad</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="delete_item_confirm">Delete Item?</string>
+    <string name="item_will_be_removed">%1$s will be removed</string>
+    <string name="unsaved_changes">Unsaved Changes</string>
+    <string name="interface_modified">Interface has been modified</string>
+    <string name="discard_changes">Discard Changes</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="please_wait">Please Wait…</string>
+    <string name="export_json">Export Json</string>
+    <string name="attach_sensors">Attach Sensors</string>
+    <string name="logging">Logging</string>
+    <string name="share_json_file">Share JSON File</string>
+    <string name="select_browser">Select Browser</string>
+    <string name="no_browser_found">No browser found</string>
+    <string name="enable_angle_snap">Enable Angle Snap</string>
+    <string name="angle_snap_desc">Snap to specific angle automatically</string>
+    <string name="snap_per_angle">Snap per %1$.2f°(360/%2$d)</string>
+    <string name="enable_grid_snap">Enable Grid Snap</string>
+    <string name="grid_snap_desc">Snap to grid automatically</string>
+    <string name="grid_size">Grid size: %1$d dp</string>
+    <string name="base_unit_size">Base Unit Size</string>
+    <string name="scale_base_unit">Scale base unit (%1$d dp)</string>
+    <string name="boundary_margin">Boundary Margin</string>
+    <string name="margin_px">Margin: %1$d px</string>
+    <string name="show_controls">Show Controls</string>
+    <string name="show_item_controls">Show Item controls</string>
+    <string name="scale_item">Scale %1$s: %2$.2f</string>
+    <string name="new_control_pad">New Control Pad</string>
+    <string name="orientation">Orientation</string>
+    <string name="create">Create</string>
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+
+    <!-- About Screen -->
+    <string name="developed_by">Developed By</string>
+    <string name="no_email_app">No email app found</string>
+    <string name="license_gpl">License : GPL v3</string>
+
+    <!-- Preferences Screen -->
+    <string name="json_over_bluetooth">Send JSON over Bluetooth</string>
+    <string name="json_over_bluetooth_desc">Send data in JSON format over Bluetooth / BLE connections.</string>
+    <string name="sensor_sampling_rate">Sensor Sampling Rate</string>
+    <string name="microseconds">Microseconds</string>
+    <string name="sampling_rate_desc">Fastest: 0μs\nNormal: 200000μs</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="vibrate_desc">Vibrate on button, DPad and switch interaction</string>
+    <string name="keep_screen_on">Keep screen on</string>
+    <string name="keep_screen_on_desc">Keep the screen on when on a control pad screen.</string>
+
+    <!-- Sensors Screen -->
+    <string name="attach">Attach</string>
+    <string name="info">Info</string>
+    <string name="hide">Hide</string>
+    <string name="max_range">Max Range: %1$f</string>
+    <string name="power">Power: %1$f mA</string>
+    <string name="resolution_val">Resolution: %1$f</string>
+    <string name="vendor_val">Vendor: %1$s</string>
+    <string name="max_delay">Max Delay: %1$d µs</string>
+    <string name="min_delay">Min Delay: %1$d µs</string>
+
+    <!-- Play Screen -->
+    <string name="please_enable_bluetooth">Please Enable bluetooth</string>
+    <string name="no_connection">No Connection</string>
+    <string name="service_uuid">Service UUID</string>
+    <string name="waiting_for_connection">Waiting for Connection</string>
+    <string name="bluetooth_gatt_desc">Connect and Subscribe to\n Following characteristic</string>
+    <string name="no_log_entries">No Log Entries</string>
+
+    <!-- Connection Config Screen -->
+    <string name="connection_config">Connection Config</string>
+    <string name="connection_type">Connection Type</string>
+    <string name="host">Host</string>
+    <string name="port">Port</string>
+    <string name="connection_timeout">Connection Timeout seconds</string>
+    <string name="listen_on_all">Listen on 0.0.0.0</string>
+    <string name="listen_on_all_desc">Listen on all available interfaces</string>
+    <string name="client_id">Client ID</string>
+    <string name="publish_topic">Publish Topic</string>
+    <string name="subscribe_topic">Subscribe Topic</string>
+    <string name="qos">Qos</string>
+    <string name="ssl">SSL</string>
+    <string name="use_credentials">Use Credentials</string>
+    <string name="username">User Name</string>
+    <string name="password">Password</string>
+    <string name="bluetooth_permission_required">Bluetooth Permission Required</string>
+    <string name="serial_port_profile">Serial Port Profile</string>
+    <string name="no_device_selected">No Device Selected</string>
+    <string name="no_paired_devices">No paired devices found</string>
+
+    <!-- QR Screens -->
+    <string name="qr_code">QR Code</string>
+    <string name="camera_permission_denied_permanent">You have denied camera permission permanently. Please grant it from settings.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="camera_permission_required">Camera permission is required to scan QR codes</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="failed_to_decode">Failed to Decode !</string>
+    <string name="re_scan">Re-scan</string>
+    <string name="decoded_successfully">Decoded Successfully</string>
+
+    <!-- Importer Screen -->
+    <string name="import_failed">Import Failed!</string>
+    <string name="try_again">Try Again</string>
+    <string name="import_options">Import Options</string>
+    <string name="import_val">Import</string>
+    <string name="successfully_imported">Successfully Imported!</string>
+    <string name="import_desc_unchanged">No modifications will be applied. Some content may be truncated on smaller screens.</string>
+    <string name="import_desc_adjust">All items will be repositioned without scaling. Some content may be truncated on smaller screens.</string>
+    <string name="import_desc_scale">All items will be scaled in the new resolution.</string>
+    <string name="import_desc_scale_center">All items will be scaled and repositioned in the new resolution, ensuring they are centered.</string>
+    <string name="import_desc_adjust_center">All items will be repositioned without scaling, ensuring they are centered.</string>
+    <!-- Connection States -->
+    <string name="conn_none">None</string>
+    <string name="conn_connecting">Connecting…</string>
+    <string name="conn_connected">Connected</string>
+    <string name="conn_disconnected">Disconnected</string>
+    <string name="conn_failed">Connection Failed</string>
+    <string name="conn_error">Error</string>
+    <string name="conn_timeout">Timeout</string>
+    <string name="conn_auth_failed">Auth Failed</string>
 </resources>

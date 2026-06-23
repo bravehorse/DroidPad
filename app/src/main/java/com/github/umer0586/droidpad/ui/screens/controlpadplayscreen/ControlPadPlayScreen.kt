@@ -77,6 +77,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -174,10 +175,30 @@ fun ControlPlayScreenContent(
     val scope = rememberCoroutineScope()
     var showLog by remember { mutableStateOf(false) }
 
+    val connConnecting = stringResource(R.string.conn_connecting)
+    val connConnected = stringResource(R.string.conn_connected)
+    val connDisconnected = stringResource(R.string.conn_disconnected)
+    val connFailed = stringResource(R.string.conn_failed)
+    val connError = stringResource(R.string.conn_error)
+    val connTimeout = stringResource(R.string.conn_timeout)
+    val connAuthFailed = stringResource(R.string.conn_auth_failed)
+    val pleaseEnableBluetooth = stringResource(R.string.please_enable_bluetooth)
+
 
     LaunchedEffect(key1 = uiState.connectionState) {
-        if(uiState.connectionState != ConnectionState.NONE)
-            snackbarHostState.showSnackbar(uiState.connectionState.toString())
+        if(uiState.connectionState != ConnectionState.NONE) {
+            val stateString = when {
+                uiState.connectionState.name.contains("CONNECTING") -> connConnecting
+                uiState.connectionState.name.contains("CONNECTED") -> connConnected
+                uiState.connectionState.name.contains("DISCONNECTED") -> connDisconnected
+                uiState.connectionState.name.contains("FAILED") -> connFailed
+                uiState.connectionState.name.contains("ERROR") -> connError
+                uiState.connectionState.name.contains("TIMEOUT") -> connTimeout
+                uiState.connectionState.name.contains("AUTH_FAILED") -> connAuthFailed
+                else -> uiState.connectionState.toString()
+            }
+            snackbarHostState.showSnackbar(stateString)
+        }
     }
 
     // When device back button is pressed
@@ -207,7 +228,7 @@ fun ControlPlayScreenContent(
                             .padding(end = 10.dp)
                             .clickable { onUiEvent(ControlPadPlayScreenEvent.OnBackPress) },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "back",
+                        contentDescription = stringResource(R.string.back),
                         tint = MaterialTheme.colorScheme.onPrimary,
                     )
                     Text(
@@ -265,7 +286,7 @@ fun ControlPlayScreenContent(
 
                                 if((uiState.connectionType == ConnectionType.BLUETOOTH_LE || uiState.connectionType == ConnectionType.BLUETOOTH) && !uiState.isBluetoothEnabled){
                                     scope.launch {
-                                        snackbarHostState.showSnackbar("Please Enable bluetooth")
+                                        snackbarHostState.showSnackbar(pleaseEnableBluetooth)
                                     }
                                 }
                             },
@@ -537,11 +558,11 @@ fun ControlPlayScreenContent(
                         Icon(
                             modifier = Modifier.size(50.dp),
                             imageVector = Icons.Filled.Lock,
-                            contentDescription = "LockIcon",
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.onError
                         )
                         Text(
-                            text = "No Connection",
+                            text = stringResource(R.string.no_connection),
                             color = MaterialTheme.colorScheme.onError,
                             style = MaterialTheme.typography.titleLarge
                         )
@@ -575,19 +596,19 @@ fun ControlPlayScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
             ) {
-                Text("Service UUID")
+                Text(stringResource(R.string.service_uuid))
                 Text("4fbfc1d7-f509-44ab-afe1-62ea40a4b111")
                 Spacer(Modifier.height(10.dp))
-                Text("Waiting for Connection")
+                Text(stringResource(R.string.waiting_for_connection))
                 LinearProgressIndicator()
-                Text("Connect and Subscribe to\n Following characteristic")
+                Text(stringResource(R.string.bluetooth_gatt_desc), textAlign = TextAlign.Center)
                 Text("dc3f5274-33ba-48de-8246-43bf8985b323")
                 Button(
                     onClick = {
                         onUiEvent(ControlPadPlayScreenEvent.OnDisconnectClick)
                         showBottomSheet = false
                     }
-                ) { Text("Cancel") }
+                ) { Text(stringResource(R.string.cancel)) }
             }
         }
     }
@@ -630,7 +651,7 @@ private fun Log(
                         .padding(5.dp)
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "No Log Entries"
+                    text = stringResource(R.string.no_log_entries)
                 )
             }
         }

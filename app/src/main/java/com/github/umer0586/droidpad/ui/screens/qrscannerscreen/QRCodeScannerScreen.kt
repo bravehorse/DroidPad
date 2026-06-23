@@ -45,10 +45,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -173,7 +175,7 @@ fun QRCodeScannerScreenContent(
                 ) {
                     val context = LocalContext.current
                     Text(
-                        "You have denied camera permission permanently. Please grant it from settings.",
+                        stringResource(R.string.camera_permission_denied_permanent),
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -186,7 +188,7 @@ fun QRCodeScannerScreenContent(
                             context.startActivity(intent)
                         }
                     ) {
-                        Text("Open Settings")
+                        Text(stringResource(R.string.open_settings))
                     }
                 }
             }
@@ -199,14 +201,14 @@ fun QRCodeScannerScreenContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 )  {
                     Text(
-                        "Camera permission is required to scan QR codes",
+                        stringResource(R.string.camera_permission_required),
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = { onEvent(QRScannerScreenEvent.OnGrantPermissionClick) }
                     ) {
-                        Text("Grant Permission")
+                        Text(stringResource(R.string.grant_permission))
                     }
                 }
             }
@@ -220,7 +222,7 @@ fun QRCodeScannerScreenContent(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Failed to Decode !")
+                    Text(stringResource(R.string.failed_to_decode))
                     Spacer(modifier = Modifier.height(20.dp))
                     Button(
                         onClick = {
@@ -231,10 +233,10 @@ fun QRCodeScannerScreenContent(
                                     setBeepEnabled(false)
                                 })
                         }
-                    ) { Text("Re-scan") }
+                    ) { Text(stringResource(R.string.re_scan)) }
                 }
             } else if (uiState.decodingSuccess) {
-                Text("Decoded Successfully")
+                Text(stringResource(R.string.decoded_successfully))
             }
         }
     }

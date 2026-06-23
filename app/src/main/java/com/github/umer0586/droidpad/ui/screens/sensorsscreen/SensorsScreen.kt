@@ -50,9 +50,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.sensor.accelerometer
@@ -110,10 +112,10 @@ fun SensorScreenContent(
                                 onEvent(SensorsScreenEvent.OnBackPress)
                             },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "BackIcon"
+                        contentDescription = stringResource(R.string.back)
                     )
                 },
-                title = { Text("Attach Sensors") },
+                title = { Text(stringResource(R.string.attach_sensors)) },
                 actions = {
                     IconButton(
                         onClick = { onEvent(SensorsScreenEvent.OnAddSensorClick) }
@@ -169,14 +171,14 @@ fun SensorScreenContent(
                             TextButton(
                                 onClick = { onEvent(SensorsScreenEvent.OnSensorSelected(controlPad,sensor)) }
                             ) {
-                                Text("Attach")
+                                Text(stringResource(R.string.attach))
                             }
                         },
                         supportingContent = {
 
                             Text(
                                 modifier = Modifier.clickable { showInfo = !showInfo },
-                                text = if(showInfo) "Hide" else "Info",
+                                text = if(showInfo) stringResource(R.string.hide) else stringResource(R.string.info),
                                 color = MaterialTheme.colorScheme.secondary
                             )
 
@@ -184,12 +186,12 @@ fun SensorScreenContent(
                     )
                     AnimatedVisibility(visible = showInfo) {
                         Column (Modifier.padding(horizontal = 10.dp, vertical = 10.dp)){
-                            Text("Max Range: ${sensor.maximumRange}")
-                            Text("Power: ${sensor.power}mA")
-                            Text("Resolution: ${sensor.resolution}")
-                            Text("Vendor: ${sensor.vendor}")
-                            Text("Max Delay: ${sensor.maxDelay}µs")
-                            Text("Min Delay: ${sensor.minDelay}µs")
+                            Text(stringResource(R.string.max_range, sensor.maximumRange))
+                            Text(stringResource(R.string.power, sensor.power))
+                            Text(stringResource(R.string.resolution_val, sensor.resolution))
+                            Text(stringResource(R.string.vendor_val, sensor.vendor))
+                            Text(stringResource(R.string.max_delay, sensor.maxDelay))
+                            Text(stringResource(R.string.min_delay, sensor.minDelay))
                         }
                     }
 

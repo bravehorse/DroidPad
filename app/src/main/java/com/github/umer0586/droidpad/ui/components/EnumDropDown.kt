@@ -49,6 +49,7 @@ inline fun <reified T : Enum<T>> EnumDropdown(
     label: String,
     enabled: Boolean = true,
     shape: RoundedCornerShape = RoundedCornerShape(50),
+    crossinline labelMapper: @Composable (T) -> String = { it.name },
     crossinline onValueSelected: (T) -> Unit
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
@@ -63,10 +64,8 @@ inline fun <reified T : Enum<T>> EnumDropdown(
             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true),
             label = { Text(label) },
             enabled = enabled,
-            value = selectedValue.name,
-            onValueChange = { newValue ->
-                onValueSelected(enumValues.first { it.name == newValue })
-            },
+            value = labelMapper(selectedValue),
+            onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpanded) },
             shape = shape
@@ -78,7 +77,7 @@ inline fun <reified T : Enum<T>> EnumDropdown(
         ) {
             enumValues.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(item.name) },
+                    text = { Text(labelMapper(item)) },
                     onClick = {
                         onValueSelected(item)
                         dropdownExpanded = false

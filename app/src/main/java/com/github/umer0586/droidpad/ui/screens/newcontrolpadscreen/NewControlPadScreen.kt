@@ -47,9 +47,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.ui.components.EnumDropdown
@@ -92,14 +94,14 @@ fun NewControlPadScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("New Control Pad") },
+                title = { Text(stringResource(R.string.new_control_pad)) },
                 navigationIcon = {
                     Icon(
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp)
                             .clickable { onUiEvent(NewControlPadScreenEvent.OnBackPress) },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "back"
+                        contentDescription = stringResource(R.string.back)
                     )
                 }
             )
@@ -123,7 +125,7 @@ fun NewControlPadScreenContent(
                         NewControlPadScreenEvent.OnControlPadNameChanged(it)
                     )
                 },
-                label = { Text("Name") },
+                label = { Text(stringResource(R.string.name)) },
                 shape = RoundedCornerShape(50)
             )
 
@@ -132,7 +134,13 @@ fun NewControlPadScreenContent(
 
             EnumDropdown<Orientation>(
                 selectedValue = uiState.controlPadOrientation,
-                label = "Orientation",
+                label = stringResource(R.string.orientation),
+                labelMapper = {
+                    when(it){
+                        Orientation.PORTRAIT -> stringResource(R.string.portrait)
+                        Orientation.LANDSCAPE -> stringResource(R.string.landscape)
+                    }
+                },
                 onValueSelected = {
                     onUiEvent(NewControlPadScreenEvent.OnControlPadOrientationChanged(it))
                 }
@@ -156,7 +164,7 @@ fun NewControlPadScreenContent(
                     },
                     shape = RoundedCornerShape(50)
                 ) {
-                    Text("Create")
+                    Text(stringResource(R.string.create))
                 }
         }
     }

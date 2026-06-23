@@ -45,10 +45,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ExternalData
 import com.github.umer0586.droidpad.data.database.entities.ConnectionConfig
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
@@ -120,12 +122,12 @@ private fun ImporterScreenContent(
                 LinearProgressIndicator()
             } else if (uiState.importFailed) {
                 Column {
-                    Text("Import Failed!")
+                    Text(stringResource(R.string.import_failed))
                     Button(
                         onClick = {
                             onEvent(ImporterScreenEvent.OnExternalDataProvided(externalData))
                         }
-                    ) { Text("Try Again") }
+                    ) { Text(stringResource(R.string.try_again)) }
                 }
             } else if (uiState.differentResolutionsDetected) {
                 Column(
@@ -145,7 +147,8 @@ private fun ImporterScreenContent(
 
                     EnumDropdown<ImportOptions>(
                         selectedValue = selectedOptionImportOption,
-                        label = "Import Options",
+                        label = stringResource(R.string.import_options),
+                        labelMapper = { it.name.replace("IMPORT_", "").replace("_", " ") },
                         onValueSelected = { selectedOptionImportOption = it }
                     )
                     TextButton(
@@ -165,10 +168,10 @@ private fun ImporterScreenContent(
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         ),
 
-                        ) { Text("Import") }
+                        ) { Text(stringResource(R.string.import_val)) }
                 }
             } else if (uiState.controlPadReady) {
-                Text("Successfully Imported!")
+                Text(stringResource(R.string.successfully_imported))
             }
         }
     }
@@ -176,14 +179,15 @@ private fun ImporterScreenContent(
 
 }
 
+@Composable
 private fun getDescriptionForImportOption(importOptions: ImportOptions): String {
 
     return when (importOptions) {
-        ImportOptions.IMPORT_UN_CHANGED -> "No modifications will be applied. Some content may be truncated on smaller screens."
-        ImportOptions.IMPORT_ADJUST_POSITION -> "All items will be repositioned without scaling. Some content may be truncated on smaller screens."
-        ImportOptions.IMPORT_SCALE -> "All items will be scaled in the new resolution."
-        ImportOptions.IMPORT_SCALE_CENTER -> "All items will be scaled and repositioned in the new resolution, ensuring they are centered."
-        ImportOptions.IMPORT_ADJUST_POSITION_CENTER -> "All items will be repositioned without scaling, ensuring they are centered."
+        ImportOptions.IMPORT_UN_CHANGED -> stringResource(R.string.import_desc_unchanged)
+        ImportOptions.IMPORT_ADJUST_POSITION -> stringResource(R.string.import_desc_adjust)
+        ImportOptions.IMPORT_SCALE -> stringResource(R.string.import_desc_scale)
+        ImportOptions.IMPORT_SCALE_CENTER -> stringResource(R.string.import_desc_scale_center)
+        ImportOptions.IMPORT_ADJUST_POSITION_CENTER -> stringResource(R.string.import_desc_adjust_center)
     }
 }
 

@@ -21,9 +21,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 @Composable
@@ -68,10 +70,10 @@ fun PreferenceScreenContent(
                                 onEvent(PreferenceScreenEvent.OnBackClick)
                             },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "BackIcon"
+                        contentDescription = stringResource(R.string.back)
                     )
                 },
-                title = { Text("Preferences") })
+                title = { Text(stringResource(R.string.preferences)) })
         }
     ) { innerPadding ->
         Column(
@@ -80,8 +82,8 @@ fun PreferenceScreenContent(
                 .padding(innerPadding),
         ) {
             ListItem(
-                headlineContent = { Text("Send JSON over Bluetooth") },
-                supportingContent = { Text("Send data in JSON format over Bluetooth / BLE connections.") },
+                headlineContent = { Text(stringResource(R.string.json_over_bluetooth)) },
+                supportingContent = { Text(stringResource(R.string.json_over_bluetooth_desc)) },
                 trailingContent = {
                     Switch(
                         checked = uiState.jsonForBluetooth,
@@ -93,12 +95,12 @@ fun PreferenceScreenContent(
             )
 
             ListItem(
-                headlineContent = {Text("Sensor Sampling Rate")},
+                headlineContent = {Text(stringResource(R.string.sensor_sampling_rate))},
                 trailingContent = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Microseconds")
+                        Text(stringResource(R.string.microseconds))
                         Slider(
                             modifier = Modifier.fillMaxWidth(0.5f).padding(start = 10.dp),
                             valueRange = 0f..200000f,
@@ -115,12 +117,12 @@ fun PreferenceScreenContent(
                         Text("${uiState.sensorSamplingRate} μs")
                     }
                 },
-                supportingContent = { Text("Fastest: 0μs\nNormal: 200000μs")}
+                supportingContent = { Text(stringResource(R.string.sampling_rate_desc))}
             )
 
             ListItem(
-                headlineContent = {Text("Vibrate")},
-                supportingContent = { Text("Vibrate on button, DPad and switch interaction") },
+                headlineContent = {Text(stringResource(R.string.vibrate))},
+                supportingContent = { Text(stringResource(R.string.vibrate_desc)) },
                 trailingContent = {
                     Switch(
                         checked = uiState.vibrate,
@@ -133,8 +135,8 @@ fun PreferenceScreenContent(
             )
 
             ListItem(
-                headlineContent = {Text("Keep screen on")},
-                supportingContent = { Text("Keep the screen on when on a control pad screen.") },
+                headlineContent = {Text(stringResource(R.string.keep_screen_on))},
+                supportingContent = { Text(stringResource(R.string.keep_screen_on_desc)) },
                 trailingContent = {
                     Switch(
                         checked = uiState.keepScreenOn,

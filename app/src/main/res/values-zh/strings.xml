@@ -1,0 +1,147 @@
+<resources>
+    <string name="app_name">Droid Pad</string>
+    <string name="back">返回</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="update">更新</string>
+    <string name="error">错误</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="name">名称</string>
+    <string name="url">链接</string>
+    <string name="download">下载</string>
+    <string name="menu">菜单</string>
+    <string name="preferences">偏好设置</string>
+    <string name="about">关于</string>
+    <string name="share">分享</string>
+    <string name="exit">退出</string>
+    <string name="import_json">导入 Json</string>
+    <string name="import_from_file">从文件导入</string>
+    <string name="import_from_link">从链接导入</string>
+    <string name="no_file_picker">未找到用于 Json 文件的文件选择器应用</string>
+    <string name="control_pads">控制面板</string>
+    <string name="no_control_pads">未找到控制面板</string>
+    <string name="delete_control_pad">删除控制面板</string>
+    <string name="delete_item">删除项目</string>
+    <string name="delete_item_confirm">删除项目？</string>
+    <string name="item_will_be_removed">%1$s 将被移除</string>
+    <string name="unsaved_changes">未保存的更改</string>
+    <string name="interface_modified">界面已修改</string>
+    <string name="discard_changes">放弃更改</string>
+    <string name="save_changes">保存更改</string>
+    <string name="please_wait">请稍候…</string>
+    <string name="export_json">导出 Json</string>
+    <string name="attach_sensors">连接传感器</string>
+    <string name="logging">日志记录</string>
+    <string name="share_json_file">分享 JSON 文件</string>
+    <string name="select_browser">选择浏览器</string>
+    <string name="no_browser_found">未找到浏览器</string>
+    <string name="enable_angle_snap">启用角度对齐</string>
+    <string name="angle_snap_desc">自动对齐到特定角度</string>
+    <string name="snap_per_angle">每 %1$.2f° 对齐一次 (360/%2$d)</string>
+    <string name="enable_grid_snap">启用网格对齐</string>
+    <string name="grid_snap_desc">自动对齐到网格</string>
+    <string name="grid_size">网格大小: %1$d dp</string>
+    <string name="base_unit_size">基准单位大小</string>
+    <string name="scale_base_unit">缩放基准单位 (%1$d dp)</string>
+    <string name="boundary_margin">边界间距</string>
+    <string name="margin_px">间距: %1$d px</string>
+    <string name="show_controls">显示控件</string>
+    <string name="show_item_controls">显示项目控件</string>
+    <string name="scale_item">缩放 %1$s: %2$.2f</string>
+    <string name="new_control_pad">新控制面板</string>
+    <string name="orientation">方向</string>
+    <string name="create">创建</string>
+    <string name="portrait">纵向</string>
+    <string name="landscape">横向</string>
+
+    <!-- About Screen -->
+    <string name="developed_by">开发者</string>
+    <string name="no_email_app">未找到邮件应用</string>
+    <string name="license_gpl">许可证：GPL v3</string>
+
+    <!-- Preferences Screen -->
+    <string name="json_over_bluetooth">通过蓝牙发送 JSON</string>
+    <string name="json_over_bluetooth_desc">通过蓝牙 / BLE 连接以 JSON 格式发送数据。</string>
+    <string name="sensor_sampling_rate">传感器采样率</string>
+    <string name="microseconds">微秒</string>
+    <string name="sampling_rate_desc">最快：0μs\n正常：200000μs</string>
+    <string name="vibrate">振动</string>
+    <string name="vibrate_desc">在按钮、方向键和开关交互时振动</string>
+    <string name="keep_screen_on">保持屏幕常亮</string>
+    <string name="keep_screen_on_desc">在控制面板屏幕上时保持屏幕开启。</string>
+
+    <!-- Sensors Screen -->
+    <string name="attach">连接</string>
+    <string name="info">信息</string>
+    <string name="hide">隐藏</string>
+    <string name="max_range">最大量程: %1$f</string>
+    <string name="power">功耗: %1$f mA</string>
+    <string name="resolution_val">分辨率: %1$f</string>
+    <string name="vendor_val">厂商: %1$s</string>
+    <string name="max_delay">最大延迟: %1$d µs</string>
+    <string name="min_delay">最小延迟: %1$d µs</string>
+
+    <!-- Play Screen -->
+    <string name="please_enable_bluetooth">请启用蓝牙</string>
+    <string name="no_connection">无连接</string>
+    <string name="service_uuid">服务 UUID</string>
+    <string name="waiting_for_connection">等待连接</string>
+    <string name="bluetooth_gatt_desc">连接并订阅以下特征</string>
+    <string name="no_log_entries">无日志条目</string>
+
+    <!-- Connection Config Screen -->
+    <string name="connection_config">连接配置</string>
+    <string name="connection_type">连接类型</string>
+    <string name="host">主机</string>
+    <string name="port">端口</string>
+    <string name="connection_timeout">连接超时秒数</string>
+    <string name="listen_on_all">监听 0.0.0.0</string>
+    <string name="listen_on_all_desc">在所有可用接口上监听</string>
+    <string name="client_id">客户端 ID</string>
+    <string name="publish_topic">发布主题</string>
+    <string name="subscribe_topic">订阅主题</string>
+    <string name="qos">Qos</string>
+    <string name="ssl">SSL</string>
+    <string name="use_credentials">使用凭据</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="bluetooth_permission_required">需要蓝牙权限</string>
+    <string name="serial_port_profile">串口协议 (SSP)</string>
+    <string name="no_device_selected">未选择设备</string>
+    <string name="no_paired_devices">未找到已配对设备</string>
+
+    <!-- QR Screens -->
+    <string name="qr_code">二维码</string>
+    <string name="camera_permission_denied_permanent">您已永久拒绝相机权限。请从设置中授予。</string>
+    <string name="open_settings">打开设置</string>
+    <string name="camera_permission_required">扫描二维码需要相机权限</string>
+    <string name="grant_permission">授予权限</string>
+    <string name="failed_to_decode">解码失败！</string>
+    <string name="re_scan">重新扫描</string>
+    <string name="decoded_successfully">解码成功</string>
+
+    <!-- Importer Screen -->
+    <string name="import_failed">导入失败！</string>
+    <string name="try_again">重试</string>
+    <string name="import_options">导入选项</string>
+    <string name="import_val">导入</string>
+    <string name="successfully_imported">导入成功！</string>
+    <string name="import_desc_unchanged">不应用任何修改。在较小的屏幕上，某些内容可能会被截断。</string>
+    <string name="import_desc_adjust">所有项目都将在不缩放的情况下重新定位。在较小的屏幕上，某些内容可能会被截断。</string>
+    <string name="import_desc_scale">所有项目都将按新分辨率缩放。</string>
+    <string name="import_desc_scale_center">所有项目都将按新分辨率进行缩放和重新定位，并确保居中。</string>
+    <string name="import_desc_adjust_center">所有项目将在不缩放的情况下重新定位，并确保居中。</string>
+    <!-- Connection States -->
+    <string name="conn_none">无</string>
+    <string name="conn_connecting">连接中…</string>
+    <string name="conn_connected">已连接</string>
+    <string name="conn_disconnected">已断开</string>
+    <string name="conn_failed">连接失败</string>
+    <string name="conn_error">错误</string>
+    <string name="conn_timeout">超时</string>
+    <string name="conn_auth_failed">认证失败</string>
+</resources>

@@ -49,7 +49,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 
@@ -77,10 +79,10 @@ fun AboutScreen(
                                 onBackPress?.invoke()
                             },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "BackIcon"
+                        contentDescription = stringResource(R.string.back)
                     )
                 },
-                title = { Text("About") })
+                title = { Text(stringResource(R.string.about)) })
         }
     ) { innerPadding ->
         Column(
@@ -130,7 +132,7 @@ fun AboutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Developed By",
+                        text = stringResource(R.string.developed_by),
                         style = MaterialTheme.typography.headlineLarge
                     )
 
@@ -153,7 +155,7 @@ fun AboutScreen(
                                     try {
                                         context.startActivity(intent)
                                     } catch (e: Exception) {
-                                        Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(context, context.getString(R.string.no_email_app), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
@@ -171,7 +173,7 @@ fun AboutScreen(
                         .clip(MaterialTheme.shapes.large)
                         .background(MaterialTheme.colorScheme.tertiaryContainer)
                         .padding(16.dp),
-                    text = "License : GPL v3",
+                    text = stringResource(R.string.license_gpl),
                     style = MaterialTheme.typography.titleLarge
                 )
             }

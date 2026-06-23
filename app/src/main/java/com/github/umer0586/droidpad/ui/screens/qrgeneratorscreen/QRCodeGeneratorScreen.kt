@@ -44,8 +44,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
 import com.github.umer0586.droidpad.data.database.entities.Orientation
 import com.github.umer0586.droidpad.data.util.ImageShareUtil
@@ -98,7 +100,7 @@ private fun QrCodeScreenContent(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("QR Code")
+                    Text(stringResource(R.string.qr_code))
                 },
                 navigationIcon = {
                     Icon(
@@ -106,7 +108,7 @@ private fun QrCodeScreenContent(
                             .padding(start = 16.dp, end = 16.dp)
                             .clickable { onEvent(QRCodeScreenEvent.OnBackPress) },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "BackIcon"
+                        contentDescription = stringResource(R.string.back)
                     )
                 },
                 actions = {
@@ -122,7 +124,7 @@ private fun QrCodeScreenContent(
                                 }
                             },
                         imageVector = Icons.Filled.Share,
-                        contentDescription = "ShareIcon"
+                        contentDescription = stringResource(R.string.share)
                     )
                 }
             )

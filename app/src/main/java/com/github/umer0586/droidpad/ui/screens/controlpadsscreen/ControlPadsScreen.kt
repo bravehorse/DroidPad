@@ -95,6 +95,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -159,9 +160,9 @@ fun ControlPadsScreen(
                     val intent = Intent(Intent.ACTION_VIEW)
                     if(intent.resolveActivity(context.packageManager) != null){
                         intent.data = Uri.parse("https://www.github.com/UmerCodez/DroidPad")
-                        context.startActivity(Intent.createChooser(intent,"Select Browser"))
+                        context.startActivity(Intent.createChooser(intent,context.getString(R.string.select_browser)))
                     } else {
-                        Toast.makeText(context,"No browser found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,context.getString(R.string.no_browser_found), Toast.LENGTH_SHORT).show()
                     }
                 }
                 is ControlPadsScreenEvent.OnQrCodeClick -> onQRGenerateClick?.invoke(event.controlPad)
@@ -211,7 +212,7 @@ fun ControlPadsScreenContent(
                             }
                         },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Menu"
+                        contentDescription = stringResource(R.string.menu)
                     )
 
                     Spacer(Modifier.height(12.dp))
@@ -242,12 +243,12 @@ fun ControlPadsScreenContent(
                     HorizontalDivider()
 
                     NavigationDrawerItem(
-                        label = { Text("Import Json") },
+                        label = { Text(stringResource(R.string.import_json)) },
                         icon = {
                             Icon(
                                 modifier = Modifier.size(24.dp),
                                 painter = painterResource(R.drawable.ic_json),
-                                contentDescription = "JsonIcon"
+                                contentDescription = null
                             )
                         },
                         selected = false,
@@ -255,12 +256,12 @@ fun ControlPadsScreenContent(
                     )
 
                     NavigationDrawerItem(
-                        label = { Text("Preferences") },
+                        label = { Text(stringResource(R.string.preferences)) },
                         icon = {
                             Icon(
                                 modifier = Modifier.size(24.dp),
                                 imageVector = Icons.Filled.Settings,
-                                contentDescription = "PreferencesIcon"
+                                contentDescription = null
                             )
                         },
                         selected = false,
@@ -268,19 +269,19 @@ fun ControlPadsScreenContent(
                     )
 
                     NavigationDrawerItem(
-                        label = { Text("About") },
+                        label = { Text(stringResource(R.string.about)) },
                         icon = { Icon(Icons.Filled.Info , null) },
                         selected = false,
                         onClick = { onUiEvent(ControlPadsScreenEvent.OnAboutClick) }
                     )
                     NavigationDrawerItem(
-                        label = { Text("Share") },
+                        label = { Text(stringResource(R.string.share)) },
                         icon = { Icon(Icons.Filled.Share , null) },
                         selected = false,
                         onClick = { onUiEvent(ControlPadsScreenEvent.OnShareClick) }
                     )
                     NavigationDrawerItem(
-                        label = { Text("Exit") },
+                        label = { Text(stringResource(R.string.exit)) },
                         icon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, null) },
                         selected = false,
                         onClick = { onUiEvent(ControlPadsScreenEvent.OnExitClick) }
@@ -295,7 +296,7 @@ fun ControlPadsScreenContent(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Control Pads") },
+                    title = { Text(stringResource(R.string.control_pads)) },
                     navigationIcon = {
                         Icon(
                             modifier = Modifier
@@ -308,7 +309,7 @@ fun ControlPadsScreenContent(
                                     }
                                 },
                             imageVector = Icons.Filled.Menu,
-                            contentDescription = "MenuIcon"
+                            contentDescription = stringResource(R.string.menu)
                         )
                     },
                     actions = {
@@ -318,7 +319,7 @@ fun ControlPadsScreenContent(
                             Icon(
                                 modifier = Modifier.size(24.dp),
                                 painter = painterResource(R.drawable.ic_qr_scanner),
-                                contentDescription = "ScanIcon"
+                                contentDescription = null
                             )
                         }
                     }
@@ -332,7 +333,7 @@ fun ControlPadsScreenContent(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "CreateIcon"
+                        contentDescription = null
                     )
                 }
 
@@ -348,7 +349,7 @@ fun ControlPadsScreenContent(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text("No control pads found", style = MaterialTheme.typography.titleLarge)
+                    Text(stringResource(R.string.no_control_pads), style = MaterialTheme.typography.titleLarge)
                 }
 
             }
@@ -382,22 +383,22 @@ fun ControlPadsScreenContent(
                     if (showDeletionAlert) {
                         AlertDialog(
                             onDismissRequest = { showDeletionAlert = false },
-                            title = { Text(text = "Delete Control Pad") },
-                            text = { Text(text = "Delete Item") },
+                            title = { Text(text = stringResource(R.string.delete_control_pad)) },
+                            text = { Text(text = stringResource(R.string.delete_item)) },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
                                         showDeletionAlert = false
                                         onUiEvent(ControlPadsScreenEvent.OnDeleteClick(controlPad))
                                     }
-                                ) { Text("Yes") }
+                                ) { Text(stringResource(R.string.yes)) }
                             },
                             dismissButton = {
                                 TextButton(
                                     onClick = {
                                         showDeletionAlert = false
                                     }
-                                ) { Text("No") }
+                                ) { Text(stringResource(R.string.no)) }
                             }
                         )
                     }
@@ -491,7 +492,7 @@ private fun ItemCard(
                 content = {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "EditIcon"
+                        contentDescription = null
                     )
                 }
             )
@@ -519,7 +520,7 @@ private fun ItemCard(
                     content = {
                         Icon(
                             imageVector = Icons.Filled.Settings,
-                            contentDescription = "SettingsIcon"
+                            contentDescription = null
                         )
                     }
                 )
@@ -540,7 +541,7 @@ private fun ItemCard(
                     onDismissRequest = { expanded = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Export Json") },
+                        text = { Text(stringResource(R.string.export_json)) },
                         onClick = {
                             onExportJsonClick?.invoke(controlPad)
                             expanded = false
@@ -548,7 +549,7 @@ private fun ItemCard(
                     )
 
                     DropdownMenuItem(
-                        text = { Text("Attach Sensors") },
+                        text = { Text(stringResource(R.string.attach_sensors)) },
                         onClick = {
                             onAttachSensorsClick?.invoke(controlPad)
                             expanded = false
@@ -556,7 +557,7 @@ private fun ItemCard(
                     )
 
                     DropdownMenuItem(
-                        text = {Text("Logging")},
+                        text = {Text(stringResource(R.string.logging))},
                         onClick = {
                             expanded = false
                         },
@@ -587,7 +588,7 @@ private fun ItemCard(
                     content = {
                         Icon(
                             imageVector = Icons.Filled.PlayArrow,
-                            contentDescription = "PlayIcon"
+                            contentDescription = null
                         )
                     }
                 )
@@ -600,7 +601,7 @@ private fun ItemCard(
                     content = {
                         Icon(
                             imageVector = Icons.Filled.Build,
-                            contentDescription = "BuildIcon"
+                            contentDescription = null
                         )
                     }
                 )
@@ -612,7 +613,7 @@ private fun ItemCard(
                     content = {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = "DeleteIcon"
+                            contentDescription = null
                         )
                     }
                 )
@@ -625,7 +626,7 @@ private fun ItemCard(
                         Icon(
                             modifier = Modifier.size(25.dp),
                             painter = painterResource(R.drawable.ic_copy),
-                            contentDescription = "DuplicateIcon"
+                            contentDescription = null
                         )
                     }
                 )
@@ -638,7 +639,7 @@ private fun ItemCard(
                         Icon(
                             modifier = Modifier.size(25.dp),
                             painter = painterResource(R.drawable.ic_qrcode),
-                            contentDescription = "QRIcon"
+                            contentDescription = null
                         )
                     }
                 )
@@ -672,7 +673,7 @@ private fun ControlPadNameEditor(
             onValueChange = {
                 modifiedControlPad = modifiedControlPad.copy(name = it)
             },
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.name)) },
             shape = RoundedCornerShape(50)
         )
 
@@ -686,7 +687,7 @@ private fun ControlPadNameEditor(
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ),
             contentPadding = PaddingValues(16.dp)
-        ) { Text("Update") }
+        ) { Text(stringResource(R.string.update)) }
     }
 }
 @Preview
@@ -782,7 +783,7 @@ private fun shareJsonStringAsFile(context: Context, jsonString: String, name: St
 
         }
 
-        val chooserIntent = Intent.createChooser(shareIntent, "Share JSON File").apply {
+        val chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_json_file)).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 

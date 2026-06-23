@@ -62,6 +62,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -128,14 +129,14 @@ private fun JsonImporterScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Import Json") },
+                title = { Text(stringResource(R.string.import_json)) },
                 navigationIcon = {
                     Icon(
                         modifier = Modifier
                             .padding(start = 16.dp, end = 16.dp)
                             .clickable { onEvent(JsonImporterScreenEvent.OnBackPress) },
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(R.string.back)
                     )
                 }
             )
@@ -156,7 +157,7 @@ private fun JsonImporterScreenContent(
                 modifier = Modifier
                     .size(150.dp),
                 painter = painterResource(R.drawable.ic_json),
-                contentDescription = "JsonIcon"
+                contentDescription = null
             )
 
 
@@ -171,14 +172,14 @@ private fun JsonImporterScreenContent(
                     } catch (e: ActivityNotFoundException) {
 
                         coroutineScope.launch {
-                            snackBarHostState.showSnackbar("No file picker app found for Json files")
+                            snackBarHostState.showSnackbar(context.getString(R.string.no_file_picker))
                         }
                     }
                 },
                 contentPadding = PaddingValues(20.dp)
             ) {
                 Text(
-                    text = "Import From File",
+                    text = stringResource(R.string.import_from_file),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -188,7 +189,7 @@ private fun JsonImporterScreenContent(
                 contentPadding = PaddingValues(20.dp)
             ) {
                 Text(
-                    text = "Import From Link",
+                    text = stringResource(R.string.import_from_link),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -218,7 +219,7 @@ private fun JsonImporterScreenContent(
                     singleLine = true,
                     onValueChange = { link = it },
                     shape = RoundedCornerShape(50),
-                    label = { Text("Url") },
+                    label = { Text(stringResource(R.string.url)) },
                     isError = !link.isValidHttpUrl(),
                     maxLines = 1
                 )
@@ -232,7 +233,7 @@ private fun JsonImporterScreenContent(
                     },
                     enabled = if(!state.downloading) link.isValidHttpUrl() else false
                 ) {
-                    Text("Download")
+                    Text(stringResource(R.string.download))
                 }
             }
         }
@@ -251,7 +252,7 @@ private fun JsonImporterScreenContent(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text("Error")
+                Text(stringResource(R.string.error))
                 HorizontalDivider()
                 Text(
                     text = state.error,
