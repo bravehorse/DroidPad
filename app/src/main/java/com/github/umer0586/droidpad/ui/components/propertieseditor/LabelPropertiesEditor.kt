@@ -19,7 +19,18 @@
 
 package com.github.umer0586.droidpad.ui.components.propertieseditor
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,13 +38,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.colorpicker.compose.ColorEnvelope
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 
-// TODO: Add color choose for label text
+
 @Composable
 fun LabelPropertiesEditor(
     controlPadItem: ControlPadItem,
@@ -42,25 +59,61 @@ fun LabelPropertiesEditor(
     hasError: ((Boolean) -> Unit)? = null,
 ) {
     var labelProperties by remember { mutableStateOf(LabelProperties.fromJson(controlPadItem.properties)) }
+    var showColorPicker by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        modifier = Modifier.testTag("labelTextField"),
-        singleLine = true,
-        value = labelProperties.text,
-        isError = labelProperties.text.isEmpty(),
-        onValueChange = {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-            if(it.isEmpty())
-                hasError?.invoke(true)
-            else
-                hasError?.invoke(false)
+        OutlinedTextField(
+            modifier = Modifier.testTag("labelTextField"),
+            singleLine = true,
+            value = labelProperties.text,
+            isError = labelProperties.text.isEmpty(),
+            onValueChange = {
 
-            if (it.length <= labelTextMaxLength) {
-                labelProperties = labelProperties.copy(text = it)
-                onLabelPropertiesChange?.invoke(labelProperties)
+                if(it.isEmpty())
+                    hasError?.invoke(true)
+                else
+                    hasError?.invoke(false)
+
+                if (it.length <= labelTextMaxLength) {
+                    labelProperties = labelProperties.copy(text = it)
+                    onLabelPropertiesChange?.invoke(labelProperties)
+                }
+            },
+            label = { Text("Label Text") },
+            shape = RoundedCornerShape(50.dp)
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Text Color") },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(labelProperties.color))
+                        .clickable {
+                            showColorPicker = !showColorPicker
+                        })
             }
-        },
-        label = { Text("Label Text") },
-        shape = RoundedCornerShape(50.dp)
-    )
+        )
+
+        AnimatedVisibility(visible = showColorPicker) {
+            HsvColorPicker(
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(10.dp),
+                controller = rememberColorPickerController(),
+                initialColor = Color(labelProperties.color),
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    labelProperties = labelProperties.copy(color = colorEnvelope.color.value)
+                    onLabelPropertiesChange?.invoke(labelProperties)
+                }
+            )
+        }
+    }
 }

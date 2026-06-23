@@ -399,7 +399,6 @@ fun ControlPlayScreenContent(
                 else if (controlPadItem.itemType == ItemType.STEP_SLIDER) {
 
                     val stepSliderProperties = StepSliderProperties.fromJson(controlPadItem.properties)
-                    var value by remember { mutableFloatStateOf(stepSliderProperties.minValue) }
 
                     ControlPadStepSlider(
                         modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
@@ -408,9 +407,8 @@ fun ControlPlayScreenContent(
                         scale = controlPadItem.scale,
                         showControls = false,
                         properties = stepSliderProperties,
-                        value = value,
+                        value = uiState.sliderStates[controlPadItem.id] ?: stepSliderProperties.minValue,
                         onValueChange = {
-                            value = it
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnSliderValueChange(
                                     id = controlPadItem.itemIdentifier,
@@ -424,7 +422,7 @@ fun ControlPlayScreenContent(
 
                 else if(controlPadItem.itemType == ItemType.LABEL){
                     ControlPadLabel(
-                        modifier = Modifier.size(width = baseUnit, height = baseUnit / 4),
+                        modifier = Modifier.size(width = baseUnit, height = baseUnit / 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,

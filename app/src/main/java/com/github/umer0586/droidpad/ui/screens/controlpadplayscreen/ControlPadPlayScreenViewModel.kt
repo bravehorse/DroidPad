@@ -201,7 +201,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             uiState.value.logState.clear()
 
             controlPadRepository.getControlPadItemsOf(controlPad)
-                .filter { it.itemType == ItemType.SLIDER }.forEach { slider ->
+                .filter { it.itemType == ItemType.SLIDER || it.itemType == ItemType.STEP_SLIDER }.forEach { slider ->
                     val sliderProperties = SliderProperties.fromJson(slider.properties)
                     uiState.value.sliderStates[slider.id] = sliderProperties.minValue
                 }
@@ -353,12 +353,16 @@ class ControlPadPlayScreenViewModel @Inject constructor(
 
             is ControlPadPlayScreenEvent.OnSliderValueChange -> {
 
-                val data = if((connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH) && !sendJsonOverBluetooth)
-                    SliderEvent(id = event.id, value = event.value).toCSV()
-                else
-                    SliderEvent(id = event.id, value = event.value).toJson()
+                val roundedValue = String.format("%.3f", event.value).toFloat()
 
-                uiState.value.sliderStates[event.idLong] = event.value
+                if (uiState.value.sliderStates[event.idLong] == roundedValue) return
+
+                val data = if((connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH) && !sendJsonOverBluetooth)
+                    SliderEvent(id = event.id, value = roundedValue).toCSV()
+                else
+                    SliderEvent(id = event.id, value = roundedValue).toJson()
+
+                uiState.value.sliderStates[event.idLong] = roundedValue
 
                 viewModelScope.launch {
                     connection?.sendData(data)
@@ -516,7 +520,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                         }
                         else if ("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "SLIDER") {
                             val sliderEvent = SliderEvent.fromJson(jsonString)
-                            controlPadItems.filter { it.itemType == ItemType.SLIDER }
+                            controlPadItems.filter { it.itemType == ItemType.SLIDER || it.itemType == ItemType.STEP_SLIDER }
                                 .find { sliderItem ->
                                     sliderItem.itemIdentifier == sliderEvent.id
                                 }?.also { sliderItem ->

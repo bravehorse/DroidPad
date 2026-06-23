@@ -83,7 +83,7 @@ fun ControlPadSlider(
             if(properties.showValue) {
                 Text(
                     modifier = Modifier.align(Alignment.TopCenter).offset(y = (-10).dp),
-                    text = "%.2f".format(value)
+                    text = if (value == value.toInt().toFloat()) value.toInt().toString() else "%.2f".format(value)
                 )
             }
 

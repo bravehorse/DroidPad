@@ -60,13 +60,7 @@ fun Gauge(
         speedUnitAlignment = if(needle) Alignment.BottomCenter else Alignment.Center,
         speedText = {
             BasicText(
-                // Display integer if currentValue is whole number else display with 2 decimal places
-
-                text = if (currentValue == currentValue.toInt().toFloat()) {
-                    currentValue.toInt().toString()
-                } else {
-                    "%.2f".format(currentValue)
-                },
+                text = currentValue.toInt().toString(),
                 style = MaterialTheme.typography.displayMedium.copy(color = color.contrast),
                 autoSize = TextAutoSize.StepBased(
                     minFontSize = MaterialTheme.typography.labelLarge.fontSize,

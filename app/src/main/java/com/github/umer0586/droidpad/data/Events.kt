@@ -22,7 +22,7 @@ data class SliderEvent(
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,SLIDER,$value"
+    fun toCSV() = "$id,SLIDER,${if (value == value.toInt().toFloat()) value.toInt().toString() else value.toString()}"
 
     companion object {
         fun fromJson(json: String): SliderEvent {

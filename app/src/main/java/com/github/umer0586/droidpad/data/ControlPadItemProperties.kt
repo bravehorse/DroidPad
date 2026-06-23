@@ -30,10 +30,10 @@ private val JsonCon = Json {
 }
 
 
-// TODO : Add color property for label
 @Serializable
 data class LabelProperties(
-    val text: String = "label"
+    val text: String = "label",
+    val color: ULong = Color.White.value
 ){
 
     fun toJson() = JsonCon.encodeToString(this)
