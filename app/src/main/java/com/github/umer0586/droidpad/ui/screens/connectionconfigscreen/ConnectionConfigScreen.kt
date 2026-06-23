@@ -283,8 +283,17 @@ fun ConnectionConfigScreenContent(
                     singleLine = true,
                     onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnTopicChange(it))},
                     shape = RoundedCornerShape(50),
-                    label = { Text("Topic") },
+                    label = { Text("Publish Topic") },
                     isError = uiState.topic.isEmpty() || uiState.topic.contains(Regex("\\s+"))
+                )
+
+                OutlinedTextField(
+                    value = uiState.feedTopic,
+                    singleLine = true,
+                    onValueChange = {onUiEvent(ConnectionConfigScreenEvent.OnFeedTopicChange(it))},
+                    shape = RoundedCornerShape(50),
+                    label = { Text("Subscribe Topic") },
+                    isError = uiState.feedTopic.isEmpty() || uiState.feedTopic.contains(Regex("\\s+"))
                 )
 
                 Column(

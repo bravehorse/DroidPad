@@ -46,7 +46,9 @@ fun ControlPadSwitch(
     checked: Boolean = true,
     onCheckedChange: ((Boolean) -> Unit)? = null,
     enabled: Boolean = true,
-    showControls: Boolean = true
+    showControls: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null
     ){
 
     ControlPadItemBase(
@@ -56,6 +58,8 @@ fun ControlPadSwitch(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
 

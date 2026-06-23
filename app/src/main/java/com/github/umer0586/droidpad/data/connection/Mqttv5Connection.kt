@@ -157,8 +157,10 @@ class Mqttv5Connection(
 
     override fun messageArrived(topic: String?, message: MqttMessage?) {
         scope.launch {
-            message?.payload?.let {
-                notifyReceivedData(it.decodeToString())
+            if (topic == mqttConfig.feedTopic) {
+                message?.payload?.let {
+                    notifyReceivedData(it.decodeToString())
+                }
             }
         }
     }
@@ -169,7 +171,7 @@ class Mqttv5Connection(
 
     override fun connectComplete(reconnect: Boolean, serverURI: String?) {
         notifyConnectionState(ConnectionState.MQTT_CONNECTED)
-        mqttAsyncClient?.subscribe("DroidPad/feed",0)
+        mqttAsyncClient?.subscribe(mqttConfig.feedTopic, 0)
     }
 
     override fun authPacketArrived(reasonCode: Int, properties: MqttProperties?) {

@@ -58,6 +58,8 @@ fun ControlPadStepSlider(
     value: Float = 2.5f,
     onValueChange: ((Float) -> Unit)? = null,
     enabled: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     ){
 
     ControlPadItemBase(
@@ -67,6 +69,8 @@ fun ControlPadStepSlider(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
 
@@ -87,7 +91,7 @@ fun ControlPadStepSlider(
             Slider(
                 modifier = Modifier
                     .padding(10.dp)
-                    .fillMaxWidth(0.5f),
+                    .fillMaxWidth(),
                 enabled = enabled,
                 steps = properties.steps,
                 value = value,

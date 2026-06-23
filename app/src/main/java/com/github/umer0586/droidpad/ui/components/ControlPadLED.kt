@@ -30,6 +30,8 @@ fun ControlPadLED(
     state: LEDSTATE = LEDSTATE.OFF,
     transformableState: TransformableState? = null,
     showControls: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
 ) {
@@ -40,6 +42,8 @@ fun ControlPadLED(
         rotation = rotation,
         scale = scale,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         transformableState = transformableState,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick

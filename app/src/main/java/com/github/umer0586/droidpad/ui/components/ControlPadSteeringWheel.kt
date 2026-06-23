@@ -49,6 +49,8 @@ fun ControlPadSteeringWheel(
     properties: SteeringWheelProperties = SteeringWheelProperties(),
     transformableState: TransformableState? = null,
     showControls: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onRotate: ((Float) -> Unit)? = null
@@ -60,6 +62,8 @@ fun ControlPadSteeringWheel(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
     ) {

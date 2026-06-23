@@ -20,6 +20,7 @@
 package com.github.umer0586.droidpad.ui.screens.controlpadbuilderscreen
 
 import android.util.Log
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -52,11 +53,19 @@ data class ControlPadBuilderScreenState(
     val itemToBeEdited: ControlPadItem? = null,
     val transformableStatesMap: SnapshotStateMap<Long, TransformableState> = SnapshotStateMap(),
     val isModified: Boolean = false,
-    val useAngleSnap: Boolean = false,
-    val angleSnapDivision:Int = 36,
+    val useAngleSnap: Boolean = true,
+    val angleSnapDivision:Int = 4,
+    val useGridSnap: Boolean = true,
+    val gridSize: Float = 20f,
+    val baseUnit: Float = 80f,
     val showDeleteConfirmation: Boolean = false,
     val itemToBeDeleted: ControlPadItem? = null,
-    val showControls: Boolean = true
+    val showControls: Boolean = true,
+    val selectedItemId: Long? = null,
+    val boundaryWidth: Int = 0,
+    val boundaryHeight: Int = 0,
+    val boundaryMargin: Float = 0f,
+    val density: Float = 1f
     )
 
 sealed interface ControlPadBuilderScreenEvent {
@@ -69,10 +78,16 @@ sealed interface ControlPadBuilderScreenEvent {
     data object OnItemEditorDismissRequest : ControlPadBuilderScreenEvent
     data object OnSaveClick: ControlPadBuilderScreenEvent
     data object OnBackPress: ControlPadBuilderScreenEvent
-    data class OnResolutionReported(val controlPad: ControlPad, val builderScreenResolution: Resolution, val tempOpen : Boolean = false) : ControlPadBuilderScreenEvent
+    data class OnResolutionReported(val controlPad: ControlPad, val builderScreenResolution: Resolution, val density: Float, val tempOpen : Boolean = false) : ControlPadBuilderScreenEvent
     data object OnTempOpenCompleted : ControlPadBuilderScreenEvent
     data class OnUseAngleSnapChange(val useAngleSnap: Boolean): ControlPadBuilderScreenEvent
     data class OnAngleSnapChange(val newValue:Float) : ControlPadBuilderScreenEvent
+    data class OnUseGridSnapChange(val useGridSnap: Boolean): ControlPadBuilderScreenEvent
+    data class OnGridSizeChange(val newValue: Float) : ControlPadBuilderScreenEvent
+    data class OnBaseUnitChange(val newValue: Float) : ControlPadBuilderScreenEvent
+    data class OnBoundaryMarginChange(val margin: Float) : ControlPadBuilderScreenEvent
+    data class OnItemSelect(val id: Long?) : ControlPadBuilderScreenEvent
+    data class OnItemScaleChange(val id: Long, val scale: Float) : ControlPadBuilderScreenEvent
     data object OnDeleteItemConfirm: ControlPadBuilderScreenEvent
     data object OnDeleteConfirmationDismissRequest: ControlPadBuilderScreenEvent
     data class OnShowControlsChange(val showControls: Boolean) : ControlPadBuilderScreenEvent
@@ -90,7 +105,7 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ControlPadBuilderScreenState())
     val uiState = _uiState.asStateFlow()
 
-    private val minScale = 0.5f
+    private val minScale = 0.25f
     private val maxScale = 6f
 
     init {
@@ -109,6 +124,26 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
             .times(360).toFloat()
             .div(_uiState.value.angleSnapDivision)// Scale back to normal and convert
     }
+
+    private fun snappedOffset(input: Float): Float {
+        val margin = _uiState.value.boundaryMargin
+        val gridSizePx = _uiState.value.gridSize * _uiState.value.density
+        return margin + ((input - margin) / gridSizePx).roundToInt() * gridSizePx
+    }
+
+    private fun snappedScale(input: Float): Float {
+        return (input / 0.25f).roundToInt() * 0.25f
+    }
+
+    private fun getItemSize(itemType: ItemType, baseUnit: Float): Offset {
+        return when (itemType) {
+            ItemType.SWITCH, ItemType.BUTTON, ItemType.LED -> Offset(baseUnit, baseUnit)
+            ItemType.SLIDER, ItemType.STEP_SLIDER -> Offset(baseUnit * 2, baseUnit)
+            ItemType.LABEL -> Offset(baseUnit, baseUnit / 4)
+            ItemType.DPAD, ItemType.JOYSTICK, ItemType.STEERING_WHEEL, ItemType.GAUGE -> Offset(baseUnit * 2, baseUnit * 2)
+        }
+    }
+
     fun loadControlPadItemsFor(controlPad: ControlPad){
         _uiState.update {
             it.copy(isModified = false)
@@ -119,43 +154,48 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 Log.d(tag, items.toString())
                 _uiState.value.controlPadItems.clear()
                 items.forEach { item ->
-                    var currentRotation: Float = item.rotation
+                    var rawOffset = item.offset
 
                     uiState.value.controlPadItems.add(item)
                     uiState.value.transformableStatesMap[item.id] =
-                        TransformableState { zoomChange, offsetChange, rotationChange ->
+                        TransformableState { _, offsetChange, _ ->
 
                             val index = uiState.value.controlPadItems.indexOfFirst { it.id == item.id }
+                            if (index == -1) return@TransformableState
                             val controlPadItem = uiState.value.controlPadItems[index]
 
-                            // Rotation not allowed for JOYSTICK and STEERING WHEEL
-                            val isRotationNotAllowed = controlPadItem.itemType == ItemType.JOYSTICK ||
-                                    controlPadItem.itemType == ItemType.STEERING_WHEEL
+                            val currentRotation = controlPadItem.rotation
+                            val currentScale = controlPadItem.scale
 
-                            val newRotation = if (isRotationNotAllowed) 0f else currentRotation + rotationChange
+                            rawOffset += offsetChange.rotateBy(currentRotation) * currentScale
 
-                            currentRotation = newRotation
+                            val itemSize = getItemSize(controlPadItem.itemType, _uiState.value.baseUnit)
+                            val margin = _uiState.value.boundaryMargin
+                            val minX = margin
+                            val maxX = _uiState.value.boundaryWidth - (itemSize.x * currentScale) - margin
+                            val minY = margin
+                            val maxY = _uiState.value.boundaryHeight - (itemSize.y * currentScale) - margin
 
-                            val effectiveRotation = when {
-                                _uiState.value.useAngleSnap -> snappedRotation(newRotation)
-                                else -> newRotation
+                            val constrainedOffset = Offset(
+                                rawOffset.x.coerceIn(minX, maxX.coerceAtLeast(minX)),
+                                rawOffset.y.coerceIn(minY, maxY.coerceAtLeast(minY))
+                            )
+
+                            val displayOffset = if (_uiState.value.useGridSnap) {
+                                Offset(
+                                    snappedOffset(constrainedOffset.x),
+                                    snappedOffset(constrainedOffset.y)
+                                )
+                            } else {
+                                constrainedOffset
                             }
-
-                            val newScale = controlPadItem.scale * zoomChange
-                            val newOffset = controlPadItem.offset +
-                                    offsetChange.rotateBy(effectiveRotation) * newScale
 
                             uiState.value.controlPadItems[index] =
                                 controlPadItem.copy(
-                                    offsetX = newOffset.x,
-                                    offsetY = newOffset.y,
-                                    // Joystick and steering wheel should not be rotatable
-                                    rotation = effectiveRotation,
-                                    scale = newScale.coerceIn(minScale,maxScale)
+                                    offsetX = displayOffset.x,
+                                    offsetY = displayOffset.y
                                 )
 
-                            // The if statement prevents the state from being updated if it is already modified.
-                            // This can help avoid triggering unnecessary recompositions.
                             if (_uiState.value.isModified != true) {
                                 _uiState.update {
                                     it.copy(isModified = true)
@@ -192,7 +232,7 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                         _uiState.value.controlPadItems.remove(itemToBeDeleted)
 
                         _uiState.update {
-                            it.copy(showDeleteConfirmation = false)
+                            it.copy(showDeleteConfirmation = false, selectedItemId = null)
                         }
                     }
 
@@ -229,13 +269,13 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
                     // reflect changes in state
                     val index = uiState.value.controlPadItems.indexOfFirst { it.id == event.controlPadItem.id }
-                    val controlPadItem = uiState.value.controlPadItems[index]
-                    uiState.value.controlPadItems[index] = controlPadItem.copy(
-                        itemIdentifier = event.controlPadItem.itemIdentifier,
-                        properties = event.controlPadItem.properties
-                    )
-
-
+                    if (index != -1) {
+                        val controlPadItem = uiState.value.controlPadItems[index]
+                        uiState.value.controlPadItems[index] = controlPadItem.copy(
+                            itemIdentifier = event.controlPadItem.itemIdentifier,
+                            properties = event.controlPadItem.properties
+                        )
+                    }
                 }
             }
             ControlPadBuilderScreenEvent.OnItemEditorDismissRequest -> {
@@ -253,46 +293,50 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                     properties = event.properties
                 )
                 viewModelScope.launch {
-                    var temporalRotation: Float =newItem.rotation
                     controlPadItemRepository.save(newItem).also { newId ->
                         controlPadItemRepository.getById(newId).also { newItem ->
-
-                            uiState.value.controlPadItems.add(newItem!!)
+                            if (newItem == null) return@also
+                            uiState.value.controlPadItems.add(newItem)
+                            var rawOffset: Offset = newItem.offset
 
                             uiState.value.transformableStatesMap[newItem.id] =
-                                TransformableState { zoomChange, offsetChange, rotationChange ->
+                                TransformableState { _, offsetChange, _ ->
                                     val index = uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
+                                    if (index == -1) return@TransformableState
                                     val controlPadItem = uiState.value.controlPadItems[index]
 
-                                    val newScale = controlPadItem.scale * zoomChange
+                                    val currentScale = controlPadItem.scale
+                                    val currentRotation = controlPadItem.rotation
 
-                                    val newRotation = if(controlPadItem.itemType == ItemType.JOYSTICK || controlPadItem.itemType == ItemType.STEERING_WHEEL) 0f
-                                    else if (_uiState.value.useAngleSnap){ temporalRotation + rotationChange }
-                                    else{ controlPadItem.rotation + rotationChange }
+                                    rawOffset += offsetChange.rotateBy(currentRotation) * currentScale
 
-                                    temporalRotation = newRotation
+                                    val itemSize = getItemSize(controlPadItem.itemType, _uiState.value.baseUnit)
+                                    val margin = _uiState.value.boundaryMargin
+                                    val minX = margin
+                                    val maxX = _uiState.value.boundaryWidth - (itemSize.x * currentScale) - margin
+                                    val minY = margin
+                                    val maxY = _uiState.value.boundaryHeight - (itemSize.y * currentScale) - margin
 
-                                    val snappedNewRotation = snappedRotation(newRotation)
+                                    val constrainedOffset = Offset(
+                                        rawOffset.x.coerceIn(minX, maxX.coerceAtLeast(minX)),
+                                        rawOffset.y.coerceIn(minY, maxY.coerceAtLeast(minY))
+                                    )
 
-                                    val newOffset = controlPadItem.offset + offsetChange.rotateBy(
-                                        if (rotationChange == 0f) controlPadItem.rotation
-                                        else if (_uiState.value.useAngleSnap) snappedNewRotation
-                                        else newRotation
-                                    ) * newScale
+                                    val displayOffset = if (_uiState.value.useGridSnap) {
+                                        Offset(
+                                            snappedOffset(constrainedOffset.x),
+                                            snappedOffset(constrainedOffset.y)
+                                        )
+                                    } else {
+                                        constrainedOffset
+                                    }
 
                                     uiState.value.controlPadItems[index] =
                                         controlPadItem.copy(
-                                            offsetX = newOffset.x,
-                                            offsetY = newOffset.y,
-                                            // Joystick and steering wheel should not be rotatable
-                                            rotation = if (rotationChange == 0f) controlPadItem.rotation
-                                            else if (_uiState.value.useAngleSnap) snappedNewRotation
-                                            else newRotation,
-                                            scale = newScale.coerceIn(minScale,maxScale)
+                                            offsetX = displayOffset.x,
+                                            offsetY = displayOffset.y
                                         )
 
-                                    // The if statement prevents the state from being updated if it is already modified.
-                                    // This can help avoid triggering unnecessary recompositions.
                                     if (_uiState.value.isModified != true) {
                                         _uiState.update {
                                             it.copy(isModified = true)
@@ -318,7 +362,13 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
             }
 
             is ControlPadBuilderScreenEvent.OnResolutionReported -> {
-
+                _uiState.update {
+                    it.copy(
+                        boundaryWidth = event.builderScreenResolution.width,
+                        boundaryHeight = event.builderScreenResolution.height,
+                        density = event.density
+                    )
+                }
                 saveResolution(
                     controlPad = event.controlPad,
                     builderScreenResolution = event.builderScreenResolution,
@@ -337,6 +387,37 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                     it.copy(angleSnapDivision = event.newValue.toInt())
                 }
             }
+
+            is ControlPadBuilderScreenEvent.OnUseGridSnapChange -> {
+                _uiState.update { it.copy(useGridSnap = event.useGridSnap) }
+            }
+
+            is ControlPadBuilderScreenEvent.OnGridSizeChange -> {
+                _uiState.update { it.copy(gridSize = event.newValue) }
+            }
+
+            is ControlPadBuilderScreenEvent.OnBaseUnitChange -> {
+                val snappedBase = (event.newValue / 10f).roundToInt() * 10f
+                _uiState.update { it.copy(baseUnit = snappedBase.coerceIn(40f, 200f)) }
+            }
+
+            is ControlPadBuilderScreenEvent.OnBoundaryMarginChange -> {
+                _uiState.update { it.copy(boundaryMargin = event.margin) }
+            }
+
+            is ControlPadBuilderScreenEvent.OnItemSelect -> {
+                _uiState.update { it.copy(selectedItemId = event.id) }
+            }
+
+            is ControlPadBuilderScreenEvent.OnItemScaleChange -> {
+                val index = _uiState.value.controlPadItems.indexOfFirst { it.id == event.id }
+                if (index != -1) {
+                    val item = _uiState.value.controlPadItems[index]
+                    _uiState.value.controlPadItems[index] = item.copy(scale = snappedScale(event.scale))
+                    _uiState.update { it.copy(isModified = true) }
+                }
+            }
+
             is ControlPadBuilderScreenEvent.OnShowControlsChange -> {
                 _uiState.update {
                     it.copy(showControls = event.showControls)

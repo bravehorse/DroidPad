@@ -22,6 +22,8 @@ fun ControlPadGauge(
     showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     properties: GaugeProperties = GaugeProperties(),
 ) {
     ControlPadItemBase(
@@ -31,6 +33,8 @@ fun ControlPadGauge(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ) {

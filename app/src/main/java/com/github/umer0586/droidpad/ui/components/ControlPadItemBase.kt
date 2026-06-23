@@ -23,6 +23,7 @@ package com.github.umer0586.droidpad.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.gestures.TransformableState
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,6 +63,8 @@ fun ControlPadItemBase(
     scale: Float,
     transformableState: TransformableState? = null,
     showControls: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     content: @Composable() (() -> Unit)
@@ -73,8 +78,15 @@ fun ControlPadItemBase(
                 scaleY = scale,
                 rotationZ = rotation,
                 translationX = offset.x,
-                translationY = offset.y
+                translationY = offset.y,
+                transformOrigin = TransformOrigin(0f, 0f)
             )
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onSelect?.invoke()
+            }
             // add transformable to listen to multitouch transformation events
             // after offset
             .then(
@@ -84,7 +96,10 @@ fun ControlPadItemBase(
                     Modifier
             )
             .then(
-                if (showControls) Modifier.border(
+                if (isSelected) Modifier.border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.primary
+                ) else if (showControls) Modifier.border(
                     width = 1.dp,
                     color = Color.LightGray
                 ) else Modifier
@@ -111,8 +126,8 @@ fun ControlPadItemBase(
 
             Icon(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .offset(x = (-15).dp)
+                    .align(Alignment.BottomEnd)
+                    .offset(x = 15.dp)
                     .size(handleSize)
                     .clickable {
                         onDeleteClick?.invoke()

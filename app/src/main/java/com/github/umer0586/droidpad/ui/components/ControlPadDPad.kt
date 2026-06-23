@@ -42,6 +42,8 @@ fun ControlPadDpad(
     showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     onClick: ((DPAD_BUTTON) -> Unit)? = null,
     onPressed: ((DPAD_BUTTON) -> Unit)? = null,
     onRelease: ((DPAD_BUTTON) -> Unit)? = null,
@@ -54,6 +56,8 @@ fun ControlPadDpad(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ) {

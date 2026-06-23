@@ -66,7 +66,7 @@ data class ButtonProperties(
     val useClickAction: Boolean = false,
     val iconId: Int = 0,
     val iconColor: ULong = Color(0xFF393000).value,
-    val shape: ButtonShape = ButtonShape.CIRCLE
+    val shape: ButtonShape = ButtonShape.SQUARE
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object{

@@ -29,6 +29,7 @@ data class MqttConfig(
     val brokerPort: Int = 1883,
     val qos: Int = 2,
     val topic: String = "DroidPad/Events",
+    val feedTopic: String = "DroidPad/feed",
     val connectionTimeoutSecs: Int = 5,
     val clientId: String = "DroidPad",
     val useCredentials: Boolean = false,

@@ -68,6 +68,8 @@ fun ControlPadButton(
     enabled: Boolean = true,
     transformableState: TransformableState? = null,
     showControls: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onPressed: (() -> Unit)? = null,
@@ -82,6 +84,8 @@ fun ControlPadButton(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ) {

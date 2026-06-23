@@ -42,6 +42,8 @@ fun ControlPadJoyStick(
     showControls: Boolean = true,
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
     onMove: ((Float, Float) -> Unit)? = null
 
     ) {
@@ -53,6 +55,8 @@ fun ControlPadJoyStick(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick
     ){

@@ -57,6 +57,8 @@ fun ControlPadSlider(
     value: Float = 2.5f,
     onValueChange: ((Float) -> Unit)? = null,
     enabled: Boolean = true,
+    isSelected: Boolean = false,
+    onSelect: (() -> Unit)? = null,
 
     ){
 
@@ -67,6 +69,8 @@ fun ControlPadSlider(
         scale = scale,
         transformableState = transformableState,
         showControls = showControls,
+        isSelected = isSelected,
+        onSelect = onSelect,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
 
@@ -86,7 +90,7 @@ fun ControlPadSlider(
             Slider(
                 modifier = Modifier
                     .padding(10.dp)
-                    .fillMaxWidth(0.5f),
+                    .fillMaxWidth(),
                 enabled = enabled,
                 value = value,
                 valueRange = properties.minValue..properties.maxValue,

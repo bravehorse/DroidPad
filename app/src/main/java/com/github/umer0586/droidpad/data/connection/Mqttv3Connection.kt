@@ -92,7 +92,7 @@ class Mqttv3Connection(
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     println(asyncActionToken)
                     notifyConnectionState(ConnectionState.MQTT_CONNECTED)
-                    mqttAsyncClient?.subscribe("DroidPad/feed",0)
+                    mqttAsyncClient?.subscribe(mqttConfig.feedTopic, 0)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -161,7 +161,7 @@ class Mqttv3Connection(
     override fun messageArrived(topic: String?, message: MqttMessage?) {
         scope.launch {
             topic?.also { topic ->
-                if (topic == "DroidPad/feed") {
+                if (topic == mqttConfig.feedTopic) {
                     message?.also {
                         notifyReceivedData(it.payload.decodeToString())
                     }

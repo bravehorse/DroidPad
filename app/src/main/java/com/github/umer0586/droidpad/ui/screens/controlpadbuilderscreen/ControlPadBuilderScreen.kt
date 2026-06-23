@@ -24,6 +24,7 @@ import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
@@ -76,6 +77,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -299,11 +301,45 @@ fun ControlPadBuilderScreenContent(
                 .background(Color(controlPad.backgroundColor.toULong()))
                 .padding(innerPadding)
                 .clipToBounds()
+                .clickable(
+                    interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                    indication = null
+                ) { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(null)) }
         ) {
 
             val density = LocalDensity.current
             val widthPx = with(density) { maxWidth.toPx() }
             val heightPx = with(density) { maxHeight.toPx() }
+
+            if (uiState.useGridSnap) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    val gridStep = uiState.gridSize * uiState.density
+                    val margin = uiState.boundaryMargin
+                    val color = Color.LightGray.copy(alpha = 0.2f)
+
+                    var x = margin
+                    while (x <= size.width) {
+                        drawLine(
+                            color = color,
+                            start = Offset(x, 0f),
+                            end = Offset(x, size.height),
+                            strokeWidth = 1f
+                        )
+                        x += gridStep
+                    }
+
+                    var y = margin
+                    while (y <= size.height) {
+                        drawLine(
+                            color = color,
+                            start = Offset(0f, y),
+                            end = Offset(size.width, y),
+                            strokeWidth = 1f
+                        )
+                        y += gridStep
+                    }
+                }
+            }
 
             LaunchedEffect(Unit) {
                 onUiEvent(
@@ -313,6 +349,7 @@ fun ControlPadBuilderScreenContent(
                             widthPx.toInt(),
                             heightPx.toInt()
                         ),
+                        density = density.density,
                         tempOpen = tempOpen
                     )
                 )
@@ -339,9 +376,12 @@ fun ControlPadBuilderScreenContent(
 
             uiState.controlPadItems.forEach { controlPadItem ->
 
+                val baseUnit = uiState.baseUnit.dp
+
                 if (controlPadItem.itemType == ItemType.SWITCH && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadSwitch(
+                        modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -349,6 +389,8 @@ fun ControlPadBuilderScreenContent(
                         properties = SwitchProperties.fromJson(controlPadItem.properties),
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -368,6 +410,7 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     val properties = SliderProperties.fromJson(controlPadItem.properties)
                     ControlPadSlider(
+                        modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -375,6 +418,8 @@ fun ControlPadBuilderScreenContent(
                         properties = properties,
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         value = (properties.minValue + properties.maxValue) / 2,
                         onDeleteClick = {
                             onUiEvent(
@@ -396,6 +441,7 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.STEP_SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     val properties = StepSliderProperties.fromJson(controlPadItem.properties)
                     ControlPadStepSlider(
+                        modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -403,6 +449,8 @@ fun ControlPadBuilderScreenContent(
                         properties = properties,
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         value = (properties.minValue + properties.maxValue) / 2,
                         onDeleteClick = {
                             onUiEvent(
@@ -421,12 +469,15 @@ fun ControlPadBuilderScreenContent(
                     )
                 } else if (controlPadItem.itemType == ItemType.LABEL && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     ControlPadLabel(
+                        modifier = Modifier.size(width = baseUnit, height = baseUnit / 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         properties = LabelProperties.fromJson(controlPadItem.properties),
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -445,6 +496,7 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.BUTTON && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadButton(
+                        modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -452,6 +504,8 @@ fun ControlPadBuilderScreenContent(
                         properties = ButtonProperties.fromJson(controlPadItem.properties),
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -470,6 +524,7 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.DPAD && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadDpad(
+                        modifier = Modifier.size(baseUnit * 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -477,6 +532,8 @@ fun ControlPadBuilderScreenContent(
                         properties = DpadProperties.fromJson(controlPadItem.properties),
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -495,6 +552,7 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.JOYSTICK && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadJoyStick(
+                        modifier = Modifier.size(baseUnit * 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -502,6 +560,8 @@ fun ControlPadBuilderScreenContent(
                         properties = JoyStickProperties.fromJson(controlPadItem.properties),
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -519,6 +579,7 @@ fun ControlPadBuilderScreenContent(
                     )
                 } else if (controlPadItem.itemType == ItemType.STEERING_WHEEL && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     ControlPadSteeringWheel(
+                        modifier = Modifier.size(baseUnit * 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -526,6 +587,8 @@ fun ControlPadBuilderScreenContent(
                         properties = SteeringWheelProperties.fromJson(controlPadItem.properties),
                         enabled = false,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -544,6 +607,7 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.LED && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadLED(
+                        modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -551,6 +615,8 @@ fun ControlPadBuilderScreenContent(
                         properties = LEDProperties.fromJson(controlPadItem.properties),
                         state = LEDSTATE.OFF,
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         onDeleteClick = {
                             onUiEvent(
                                 ControlPadBuilderScreenEvent.OnDeleteItemClick(
@@ -570,13 +636,15 @@ fun ControlPadBuilderScreenContent(
                 } else if (controlPadItem.itemType == ItemType.GAUGE && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadGauge(
-                        modifier = Modifier.size(250.dp),
+                        modifier = Modifier.size(baseUnit * 2),
                         value = 10f,
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         transformableState = uiState.transformableStatesMap[controlPadItem.id],
                         showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
                         properties = GaugeProperties.fromJson(controlPadItem.properties)
                             .copy(minValue = 0f, maxValue = 20f),
                         onDeleteClick = {
@@ -715,6 +783,37 @@ fun ControlPadBuilderScreenContent(
                         ) { Text("Cancel") }
                     }
                 )
+            }
+
+            if (uiState.selectedItemId != null) {
+                val selectedItem = uiState.controlPadItems.find { it.id == uiState.selectedItemId }
+                if (selectedItem != null) {
+                    Surface(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 16.dp)
+                            .fillMaxWidth(0.8f)
+                            .zIndex(10f),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f),
+                        tonalElevation = 4.dp
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Scale ${selectedItem.itemIdentifier}: ${"%.2f".format(selectedItem.scale)}",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                            Slider(
+                                value = selectedItem.scale,
+                                onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnItemScaleChange(selectedItem.id, it)) },
+                                valueRange = 0.25f..6f
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -989,6 +1088,82 @@ fun EditorAidsBottomSheetContent(
             )
 
         }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Enable Grid Snap") },
+            supportingContent = {
+                Text(
+                    text = "Snap to grid automatically",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            },
+            trailingContent = {
+                Switch(
+                    checked = uiState.useGridSnap,
+                    onCheckedChange = {
+                        onUiEvent(ControlPadBuilderScreenEvent.OnUseGridSnapChange(it))
+                    }
+                )
+            }
+        )
+        AnimatedVisibility(uiState.useGridSnap) {
+            ListItem(
+                modifier = Modifier.fillMaxWidth(0.7f),
+                headlineContent = {
+                    Slider(
+                        valueRange = 5f..100f,
+                        steps = 18,
+                        value = uiState.gridSize,
+                        onValueChange = {newValue ->
+                            onUiEvent(ControlPadBuilderScreenEvent.OnGridSizeChange(newValue))
+                        }
+                    )
+                },
+                supportingContent = {
+                    Text("Grid size: ${uiState.gridSize.toInt()} dp")
+                },
+            )
+
+        }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Base Unit Size") },
+            supportingContent = {
+                Column {
+                    Slider(
+                        valueRange = 40f..200f,
+                        value = uiState.baseUnit,
+                        onValueChange = { newValue ->
+                            onUiEvent(ControlPadBuilderScreenEvent.OnBaseUnitChange(newValue))
+                        }
+                    )
+                    Text(
+                        text = "Scale base unit (${uiState.baseUnit.toInt()} dp)",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = "Boundary Margin") },
+            supportingContent = {
+                Column {
+                    Slider(
+                        valueRange = 0f..100f,
+                        value = uiState.boundaryMargin,
+                        onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnBoundaryMarginChange(it)) }
+                    )
+                    Text(
+                        text = "Margin: ${uiState.boundaryMargin.toInt()} px",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+        )
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),

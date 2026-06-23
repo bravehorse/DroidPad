@@ -50,6 +50,7 @@ data class ConnectionConfigScreenState(
     val port: Int = 8080,
     val clientId: String = "DroidPad",
     val topic: String = "DroidPad/Events",
+    val feedTopic: String = "DroidPad/feed",
     val hasInputError: Boolean = false,
     val useCredentials: Boolean = false,
     val username: String = "",
@@ -74,6 +75,7 @@ sealed interface ConnectionConfigScreenEvent {
     data class OnPortChange(val portNo: String) : ConnectionConfigScreenEvent
     data class OnClientIdChange(val clientId: String) : ConnectionConfigScreenEvent
     data class OnTopicChange(val topic: String) : ConnectionConfigScreenEvent
+    data class OnFeedTopicChange(val feedTopic: String) : ConnectionConfigScreenEvent
     data class OnUsernameChange(val username: String) : ConnectionConfigScreenEvent
     data class OnPasswordChange(val password: String) : ConnectionConfigScreenEvent
     data class OnConnectionTimeoutChange(val connectionTimeout: Int) : ConnectionConfigScreenEvent
@@ -127,10 +129,11 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                 }
 
                 if (uiState.connectionType == ConnectionType.MQTT_V5 || uiState.connectionType == ConnectionType.MQTT_V3) {
-                    _uiState.update {
+                        _uiState.update {
                         it.copy(
                             hasInputError = uiState.clientId.isEmpty()
                                     || uiState.topic.isEmpty() || uiState.topic.contains(Regex("\\s+"))
+                                    || uiState.feedTopic.isEmpty() || uiState.feedTopic.contains(Regex("\\s+"))
                                     || (uiState.username.isEmpty() && uiState.useCredentials) || (uiState.password.isEmpty() && uiState.useCredentials)
                         )
                     }
@@ -216,6 +219,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                                     port = mqttConfig.brokerPort,
                                     clientId = mqttConfig.clientId,
                                     topic = mqttConfig.topic,
+                                    feedTopic = mqttConfig.feedTopic,
                                     useCredentials = mqttConfig.useCredentials,
                                     useSSL = mqttConfig.useSSL,
                                     username = mqttConfig.userName,
@@ -237,6 +241,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                                     port = mqttConfig.brokerPort,
                                     clientId = mqttConfig.clientId,
                                     topic = mqttConfig.topic,
+                                    feedTopic = mqttConfig.feedTopic,
                                     useCredentials = mqttConfig.useCredentials,
                                     useSSL = mqttConfig.useSSL,
                                     username = mqttConfig.userName,
@@ -332,6 +337,10 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                 _uiState.update { it.copy(topic = event.topic) }
             }
 
+            is ConnectionConfigScreenEvent.OnFeedTopicChange -> {
+                _uiState.update { it.copy(feedTopic = event.feedTopic) }
+            }
+
             is ConnectionConfigScreenEvent.OnUsernameChange -> {
                 _uiState.update { it.copy(username = event.username) }
             }
@@ -401,6 +410,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                     brokerPort = uiState.value.port,
                     clientId = uiState.value.clientId,
                     topic = uiState.value.topic,
+                    feedTopic = uiState.value.feedTopic,
                     useCredentials = uiState.value.useCredentials,
                     userName = uiState.value.username,
                     password = uiState.value.password,
@@ -417,6 +427,7 @@ class ConnectionConfigScreenViewModel @Inject constructor(
                     brokerPort = uiState.value.port,
                     clientId = uiState.value.clientId,
                     topic = uiState.value.topic,
+                    feedTopic = uiState.value.feedTopic,
                     useCredentials = uiState.value.useCredentials,
                     userName = uiState.value.username,
                     password = uiState.value.password,
