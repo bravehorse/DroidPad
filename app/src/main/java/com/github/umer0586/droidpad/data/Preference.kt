@@ -27,5 +27,6 @@ data class Preference(
     val sendJsonOverBluetooth: Boolean,
     val sensorSamplingRate: Int,
     val vibrate: Boolean,
-    val keepScreenOn: Boolean
+    val keepScreenOn: Boolean,
+    val baseUnit: Float = 80f
 )

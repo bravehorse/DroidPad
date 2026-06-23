@@ -55,6 +55,7 @@ class PreferenceRepositoryImp(
         val sensorSamplingRate = intPreferencesKey("SENSOR_SAMPLING_RATE")
         val vibrate = booleanPreferencesKey("VIBRATE")
         val keepScreenOn = booleanPreferencesKey("KEEP_SCREEN_ON")
+        val baseUnit = stringPreferencesKey("BASE_UNIT")
     }
 
     private object Defaults {
@@ -64,6 +65,7 @@ class PreferenceRepositoryImp(
         val sensorSamplingRate = 200000
         val vibrate = false
         val keepScreenOn = false
+        val baseUnit = "80.0"
     }
 
 
@@ -75,6 +77,7 @@ class PreferenceRepositoryImp(
             pref[Key.sensorSamplingRate] = preference.sensorSamplingRate
             pref[Key.vibrate] = preference.vibrate
             pref[Key.keepScreenOn] = preference.keepScreenOn
+            pref[Key.baseUnit] = preference.baseUnit.toString()
         }
     }
 
@@ -86,7 +89,8 @@ class PreferenceRepositoryImp(
                 sendJsonOverBluetooth = pref[Key.jsonTypeForBluetooth] ?: Defaults.jsonTypeForBluetooth,
                 sensorSamplingRate = pref[Key.sensorSamplingRate] ?: Defaults.sensorSamplingRate,
                 vibrate = pref[Key.vibrate] ?: Defaults.vibrate,
-                keepScreenOn = pref[Key.keepScreenOn] ?: Defaults.keepScreenOn
+                keepScreenOn = pref[Key.keepScreenOn] ?: Defaults.keepScreenOn,
+                baseUnit = (pref[Key.baseUnit] ?: Defaults.baseUnit).toFloat()
             )
         }.flowOn(ioDispatcher)
 

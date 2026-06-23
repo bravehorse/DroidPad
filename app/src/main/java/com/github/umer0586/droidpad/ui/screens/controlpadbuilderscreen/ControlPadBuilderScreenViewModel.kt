@@ -110,6 +110,11 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
     init {
         Log.d(tag,"init ${hashCode()}")
+        viewModelScope.launch {
+            preferenceRepository.preference.collect { preference ->
+                _uiState.update { it.copy(baseUnit = preference.baseUnit) }
+            }
+        }
     }
 
     override fun onCleared() {
@@ -398,7 +403,11 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
             is ControlPadBuilderScreenEvent.OnBaseUnitChange -> {
                 val snappedBase = (event.newValue / 10f).roundToInt() * 10f
-                _uiState.update { it.copy(baseUnit = snappedBase.coerceIn(40f, 200f)) }
+                val clampedBase = snappedBase.coerceIn(40f, 200f)
+                _uiState.update { it.copy(baseUnit = clampedBase) }
+                viewModelScope.launch {
+                    preferenceRepository.updatePreference { it.copy(baseUnit = clampedBase) }
+                }
             }
 
             is ControlPadBuilderScreenEvent.OnBoundaryMarginChange -> {

@@ -92,7 +92,8 @@ data class ControlPadPlayScreenState(
     val controlPadBackgroundColor : Long = Color.Red.value.toLong(),
     val hostAddress: String = "",
     val isBluetoothEnabled: Boolean = false,
-    val keepScreenOn: Boolean = false
+    val keepScreenOn: Boolean = false,
+    val baseUnit: Float = 80f
 )
 sealed interface ControlPadPlayScreenEvent {
     data object OnConnectClick : ControlPadPlayScreenEvent
@@ -152,7 +153,10 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 samplingRate = preference.sensorSamplingRate
                 vibrate = preference.vibrate
                 _uiState.update {
-                    it.copy(keepScreenOn = preference.keepScreenOn)
+                    it.copy(
+                        keepScreenOn = preference.keepScreenOn,
+                        baseUnit = preference.baseUnit
+                    )
                 }
             }
         }

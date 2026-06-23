@@ -322,12 +322,15 @@ fun ControlPlayScreenContent(
                 .background(Color(uiState.controlPadBackgroundColor.toULong()))
                 .padding(innerPadding)
         ){
+            val baseUnit = uiState.baseUnit.dp
+
             uiState.controlPadItems.forEach {controlPadItem ->
                 if (controlPadItem.itemType == ItemType.SWITCH) {
 
                     val switchProperties = SwitchProperties.fromJson(controlPadItem.properties)
 
                     ControlPadSwitch(
+                        modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -353,6 +356,7 @@ fun ControlPlayScreenContent(
                     //var value by remember { mutableFloatStateOf(sliderProperties.minValue) }
 
                     ControlPadSlider(
+                        modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -377,6 +381,7 @@ fun ControlPlayScreenContent(
                     var value by remember { mutableFloatStateOf(stepSliderProperties.minValue) }
 
                     ControlPadStepSlider(
+                        modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -398,6 +403,7 @@ fun ControlPlayScreenContent(
 
                 else if(controlPadItem.itemType == ItemType.LABEL){
                     ControlPadLabel(
+                        modifier = Modifier.size(width = baseUnit, height = baseUnit / 4),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -409,6 +415,7 @@ fun ControlPlayScreenContent(
                 else if(controlPadItem.itemType == ItemType.BUTTON){
 
                     ControlPadButton(
+                        modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -423,6 +430,7 @@ fun ControlPlayScreenContent(
                 else if(controlPadItem.itemType == ItemType.DPAD){
 
                     ControlPadDpad(
+                        modifier = Modifier.size(baseUnit * 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -458,6 +466,7 @@ fun ControlPlayScreenContent(
                 else if(controlPadItem.itemType == ItemType.JOYSTICK){
 
                     ControlPadJoyStick(
+                        modifier = Modifier.size(baseUnit * 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -471,6 +480,7 @@ fun ControlPlayScreenContent(
 
                 else if(controlPadItem.itemType == ItemType.STEERING_WHEEL){
                     ControlPadSteeringWheel(
+                        modifier = Modifier.size(baseUnit * 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -484,6 +494,7 @@ fun ControlPlayScreenContent(
 
                 else if(controlPadItem.itemType == ItemType.LED){
                     ControlPadLED(
+                        modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
@@ -495,7 +506,7 @@ fun ControlPlayScreenContent(
 
                 else if(controlPadItem.itemType == ItemType.GAUGE){
                     ControlPadGauge(
-                        modifier = Modifier.size(250.dp),
+                        modifier = Modifier.size(baseUnit * 2),
                         value = uiState.gaugeStates[controlPadItem.id] ?: 0f,
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
