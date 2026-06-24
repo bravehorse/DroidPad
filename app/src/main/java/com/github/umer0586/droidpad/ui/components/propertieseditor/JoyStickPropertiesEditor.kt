@@ -57,13 +57,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
@@ -101,30 +101,21 @@ fun JoyStickPropertiesEditor(
 
 
         AnimatedVisibility(visible = showColorPickerForBackground) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(joyStickProperties.backgroundColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                onColorChanged = { color ->
                     joyStickProperties =
-                        joyStickProperties.copy(backgroundColor = colorEnvelope.color.value)
+                        joyStickProperties.copy(backgroundColor = color.value)
                     onJoyStickPropertiesChange?.invoke(joyStickProperties)
-                    // do something
                 }
             )
         }
 
         AnimatedVisibility(visible = showColorPickerForHandle) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(joyStickProperties.handleColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
-                    joyStickProperties = joyStickProperties.copy(handleColor = colorEnvelope.color.value)
+                onColorChanged = { color ->
+                    joyStickProperties = joyStickProperties.copy(handleColor = color.value)
                     onJoyStickPropertiesChange?.invoke(joyStickProperties)
                 }
             )

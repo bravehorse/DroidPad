@@ -42,12 +42,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
+import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.DPadStyle
 import com.github.umer0586.droidpad.data.DpadProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
@@ -107,30 +107,21 @@ fun DPadPropertiesEditor(
         )
 
         AnimatedVisibility(visible = showColorPickerForButton) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(dPadProperties.buttonColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                onColorChanged = { color ->
                     dPadProperties =
-                        dPadProperties.copy(buttonColor = colorEnvelope.color.value)
+                        dPadProperties.copy(buttonColor = color.value)
                     onDpadPropertiesChange?.invoke(dPadProperties)
-                    // do something
                 }
             )
         }
 
         AnimatedVisibility(visible = showColorPickerForBackground) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(dPadProperties.backgroundColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
-                    dPadProperties = dPadProperties.copy(backgroundColor = colorEnvelope.color.value)
+                onColorChanged = { color ->
+                    dPadProperties = dPadProperties.copy(backgroundColor = color.value)
                     onDpadPropertiesChange?.invoke(dPadProperties)
                 }
             )

@@ -56,13 +56,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.ButtonProperties
 import com.github.umer0586.droidpad.data.ButtonShape
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
@@ -175,46 +175,31 @@ fun ButtonPropertiesEditor(
 
 
         AnimatedVisibility(visible = showColorPickerForText) {
-
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(buttonProperties.textColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
-                    buttonProperties = buttonProperties.copy(textColor = colorEnvelope.color.value)
+                onColorChanged = { color ->
+                    buttonProperties = buttonProperties.copy(textColor = color.value)
                     onButtonPropertiesChange?.invoke(buttonProperties)
-                    // do something
                 }
             )
         }
 
         AnimatedVisibility(visible = showColorPickerForButton) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(buttonProperties.buttonColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                onColorChanged = { color ->
                     buttonProperties =
-                        buttonProperties.copy(buttonColor = colorEnvelope.color.value)
+                        buttonProperties.copy(buttonColor = color.value)
                     onButtonPropertiesChange?.invoke(buttonProperties)
-                    // do something
                 }
             )
         }
 
         AnimatedVisibility(visible = showColorPickerForIcon) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(buttonProperties.iconColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
-                    buttonProperties = buttonProperties.copy(iconColor = colorEnvelope.color.value)
+                onColorChanged = { color ->
+                    buttonProperties = buttonProperties.copy(iconColor = color.value)
                     onButtonPropertiesChange?.invoke(buttonProperties)
                 }
             )

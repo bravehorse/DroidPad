@@ -27,13 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.GaugeProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
@@ -127,15 +127,11 @@ fun GaugePropertiesEditor(
         var showColorPicker by remember { mutableStateOf(false) }
 
         AnimatedVisibility(showColorPicker) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
+            ColorPickerWithHex(
                 initialColor = Color(gaugeProperties.color),
-                controller = rememberColorPickerController(),
-                onColorChanged = {
+                onColorChanged = { color ->
                     gaugeProperties = gaugeProperties.copy(
-                        color = it.color.value
+                        color = color.value
                     )
                     onGaugePropertiesChange?.invoke(gaugeProperties)
                 }
@@ -195,5 +191,3 @@ fun GaugePropertiesEditorPreview() {
         }
     }
 }
-
-

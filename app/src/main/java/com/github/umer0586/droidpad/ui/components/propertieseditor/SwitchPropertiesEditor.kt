@@ -41,12 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
+import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.SwitchProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
@@ -79,30 +79,21 @@ fun SwitchPropertiesEditor(
 
 
         AnimatedVisibility(visible = showColorPickerForTrack) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(switchProperties.trackColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                onColorChanged = { color ->
                     switchProperties =
-                        switchProperties.copy(trackColor = colorEnvelope.color.value)
+                        switchProperties.copy(trackColor = color.value)
                     onSwitchPropertiesChange?.invoke(switchProperties)
-                    // do something
                 }
             )
         }
 
         AnimatedVisibility(visible = showColorPickerForThumb) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(switchProperties.thumbColor),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
-                    switchProperties = switchProperties.copy(thumbColor = colorEnvelope.color.value)
+                onColorChanged = { color ->
+                    switchProperties = switchProperties.copy(thumbColor = color.value)
                     onSwitchPropertiesChange?.invoke(switchProperties)
                 }
             )

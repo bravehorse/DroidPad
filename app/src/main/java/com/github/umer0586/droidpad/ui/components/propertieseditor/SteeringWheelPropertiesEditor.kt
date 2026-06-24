@@ -42,12 +42,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
+import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
@@ -76,15 +76,11 @@ fun SteeringWheelPropertiesEditor(
         )
 
         AnimatedVisibility(showColorPicker) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
-                controller = rememberColorPickerController(),
+            ColorPickerWithHex(
                 initialColor = Color(steeringWheelProperties.color),
-                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                onColorChanged = { color ->
                     steeringWheelProperties =
-                        steeringWheelProperties.copy(color = colorEnvelope.color.value)
+                        steeringWheelProperties.copy(color = color.value)
                     onSteeringWheelPropertiesChange?.invoke(steeringWheelProperties)
                 }
             )

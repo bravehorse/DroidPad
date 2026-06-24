@@ -49,12 +49,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
-import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
@@ -168,15 +168,11 @@ fun StepSliderPropertiesEditor(
         var showColorPickerForTrack by remember { mutableStateOf(false) }
 
         AnimatedVisibility(visible = showColorPickerForThumb) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
+            ColorPickerWithHex(
                 initialColor = Color(stepSliderProperties.thumbColor),
-                controller = rememberColorPickerController(),
-                onColorChanged = {
+                onColorChanged = { color ->
                     stepSliderProperties = stepSliderProperties.copy(
-                        thumbColor = it.color.value
+                        thumbColor = color.value
                     )
                     onStepSliderPropertiesChange?.invoke(stepSliderProperties)
                 }
@@ -184,15 +180,11 @@ fun StepSliderPropertiesEditor(
         }
 
         AnimatedVisibility(visible = showColorPickerForTrack) {
-            HsvColorPicker(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(10.dp),
+            ColorPickerWithHex(
                 initialColor = Color(stepSliderProperties.trackColor),
-                controller = rememberColorPickerController(),
-                onColorChanged = {
+                onColorChanged = { color ->
                     stepSliderProperties = stepSliderProperties.copy(
-                        trackColor = it.color.value
+                        trackColor = color.value
                     )
                     onStepSliderPropertiesChange?.invoke(stepSliderProperties)
                 }
