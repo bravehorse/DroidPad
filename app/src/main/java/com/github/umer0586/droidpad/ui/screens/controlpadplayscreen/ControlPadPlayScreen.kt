@@ -421,13 +421,15 @@ fun ControlPlayScreenContent(
                 }
 
                 else if(controlPadItem.itemType == ItemType.LABEL){
+                    val labelProperties = LabelProperties.fromJson(controlPadItem.properties)
+                    val dynamicText = uiState.labelStates[controlPadItem.id]
                     ControlPadLabel(
                         modifier = Modifier.size(width = baseUnit, height = baseUnit / 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         showControls = false,
-                        properties = LabelProperties.fromJson(controlPadItem.properties),
+                        properties = if (dynamicText.isNullOrEmpty()) labelProperties else labelProperties.copy(text = dynamicText),
                     )
                 }
 

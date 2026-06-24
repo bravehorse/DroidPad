@@ -81,12 +81,16 @@ fun ControlPadItemBase(
                 translationY = offset.y,
                 transformOrigin = TransformOrigin(0f, 0f)
             )
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                onSelect?.invoke()
-            }
+            .then(
+                if (onSelect != null)
+                    Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        onSelect.invoke()
+                    }
+                else Modifier
+            )
             // add transformable to listen to multitouch transformation events
             // after offset
             .then(

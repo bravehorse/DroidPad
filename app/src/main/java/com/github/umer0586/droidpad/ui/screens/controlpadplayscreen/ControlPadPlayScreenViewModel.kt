@@ -32,6 +32,7 @@ import com.github.umer0586.droidpad.data.DPadEvent
 import com.github.umer0586.droidpad.data.GaugeEvent
 import com.github.umer0586.droidpad.data.GaugeProperties
 import com.github.umer0586.droidpad.data.JoyStickEvent
+import com.github.umer0586.droidpad.data.LabelEvent
 import com.github.umer0586.droidpad.data.LedEvent
 import com.github.umer0586.droidpad.data.LogEvent
 import com.github.umer0586.droidpad.data.SliderEvent
@@ -84,6 +85,7 @@ data class ControlPadPlayScreenState(
     val switchStates: SnapshotStateMap<Long,Boolean> = mutableStateMapOf(),
     val sliderStates: SnapshotStateMap<Long,Float> = mutableStateMapOf(),
     val ledStates: SnapshotStateMap<Long, LEDSTATE> = mutableStateMapOf(),
+    val labelStates: SnapshotStateMap<Long, String> = mutableStateMapOf(),
     val logState: SnapshotStateList<LogEvent> = mutableStateListOf(),
     val gaugeStates: SnapshotStateMap<Long, Float> = mutableStateMapOf(),
     val connectionType: ConnectionType = ConnectionType.TCP,
@@ -197,6 +199,11 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 .filter { it.itemType == ItemType.LED }.forEach { led ->
                 uiState.value.ledStates[led.id] = LEDSTATE.OFF
             }
+
+            controlPadRepository.getControlPadItemsOf(controlPad)
+                .filter { it.itemType == ItemType.LABEL }.forEach { label ->
+                    uiState.value.labelStates[label.id] = ""
+                }
 
             uiState.value.logState.clear()
 
@@ -551,6 +558,15 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                     gaugeItem.itemIdentifier == gaugeEvent.id
                                 }?.also { gaugeItem ->
                                     uiState.value.gaugeStates[gaugeItem.id] = gaugeEvent.value
+                                }
+                        }
+                        else if("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "LABEL"){
+                            val labelEvent = LabelEvent.fromJson(jsonString)
+                            controlPadItems.filter { it.itemType == ItemType.LABEL }
+                                .find { labelItem ->
+                                    labelItem.itemIdentifier == labelEvent.id
+                                }?.also { labelItem ->
+                                    uiState.value.labelStates[labelItem.id] = labelEvent.text
                                 }
                         }
 

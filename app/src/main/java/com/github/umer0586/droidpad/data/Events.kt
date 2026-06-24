@@ -137,3 +137,16 @@ data class GaugeEvent(
         }
     }
 }
+
+@Serializable
+data class LabelEvent(
+    val id: String,
+    val type: ItemType = ItemType.LABEL,
+    val text: String
+){
+    companion object {
+        fun fromJson(json: String): LabelEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
+}

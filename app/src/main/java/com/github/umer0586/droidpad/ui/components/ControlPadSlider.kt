@@ -20,12 +20,17 @@
 package com.github.umer0586.droidpad.ui.components
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.TransformableState
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -43,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ControlPadSlider(
     modifier: Modifier = Modifier,
@@ -100,8 +106,17 @@ fun ControlPadSlider(
                     activeTrackColor = Color(properties.trackColor),
                     disabledThumbColor = Color(properties.thumbColor),
                     disabledActiveTrackColor = Color(properties.trackColor),
-
+                ),
+                thumb = {
+                    Box(
+                        modifier = Modifier
+                            .size(width = 24.dp, height = 40.dp)
+                            .background(
+                                color = Color(properties.thumbColor),
+                                shape = RoundedCornerShape(4.dp)
+                            )
                     )
+                }
             )
         }
     }
