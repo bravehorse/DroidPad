@@ -44,6 +44,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -83,13 +85,13 @@ fun LabelPropertiesEditor(
                     onLabelPropertiesChange?.invoke(labelProperties)
                 }
             },
-            label = { Text("Label Text") },
+            label = { Text(stringResource(R.string.label_text)) },
             shape = RoundedCornerShape(50.dp)
         )
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Text Color") },
+            headlineContent = { Text(text = stringResource(R.string.text_color)) },
             trailingContent = {
                 Box(
                     Modifier

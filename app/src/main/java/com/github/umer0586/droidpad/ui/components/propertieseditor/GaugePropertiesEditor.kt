@@ -30,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.github.umer0586.droidpad.data.GaugeProperties
@@ -81,13 +83,13 @@ fun GaugePropertiesEditor(
         )
 
         if(minGreaterThanMaxError){
-            Text(text = "Min should be less than Max")
+            Text(text = stringResource(R.string.min_less_than_max))
         }
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.7f),
             singleLine = true,
-            prefix = { Text("Min") },
+            prefix = { Text(stringResource(R.string.min_value)) },
             value = minValue,
             isError = minValue.toFloatOrNull() == null,
             onValueChange = { minValue = it },
@@ -98,7 +100,7 @@ fun GaugePropertiesEditor(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.7f),
             singleLine = true,
-            prefix = { Text("Max") },
+            prefix = { Text(stringResource(R.string.max_value)) },
             value = maxValue,
             isError = maxValue.toFloatOrNull() == null,
             onValueChange = { maxValue = it },
@@ -109,7 +111,7 @@ fun GaugePropertiesEditor(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.7f),
             singleLine = true,
-            prefix = { Text("Unit") },
+            prefix = { Text(stringResource(R.string.unit)) },
             value = unit,
             isError = unit.isEmpty().also {
                 hasError?.invoke(it)
@@ -142,7 +144,7 @@ fun GaugePropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Needle") },
+            headlineContent = { Text(text = stringResource(R.string.needle)) },
             trailingContent = {
                 Switch(
                     checked = gaugeProperties.needle,
@@ -156,7 +158,7 @@ fun GaugePropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Color") },
+            headlineContent = { Text(text = stringResource(R.string.color)) },
             trailingContent = {
                 Box(
                     Modifier

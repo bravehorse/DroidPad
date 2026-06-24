@@ -58,6 +58,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -120,14 +122,14 @@ fun ButtonPropertiesEditor(
                 }
 
             },
-            label = { Text("Text") },
+            label = { Text(stringResource(R.string.button_text)) },
             shape = textFieldShape
         )
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Shape") },
-            supportingContent = {Text(text = buttonProperties.shape.name.lowercase(Locale.getDefault()))},
+            headlineContent = { Text(text = stringResource(R.string.shape)) },
+            supportingContent = {Text(text = stringResource(buttonProperties.shape.getDisplayNameRes()))},
             trailingContent = {
                 var expanded by remember { mutableStateOf(false) }
                 IconButton(
@@ -145,7 +147,7 @@ fun ButtonPropertiesEditor(
                 ) {
                     ButtonShape.entries.forEach { shape ->
                         DropdownMenuItem(
-                            text = { Text(text = shape.name) },
+                            text = { Text(text = stringResource(shape.getDisplayNameRes())) },
                             onClick = {
                                 expanded = false
                                 buttonProperties = buttonProperties.copy(shape = shape)
@@ -159,7 +161,7 @@ fun ButtonPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Click Action") },
+            headlineContent = { Text(text = stringResource(R.string.click_action)) },
             trailingContent = {
                 Switch(
                     checked = buttonProperties.useClickAction,
@@ -220,7 +222,7 @@ fun ButtonPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Use Icon") },
+            headlineContent = { Text(text = stringResource(R.string.use_icon)) },
             trailingContent = {
                 Switch(
                     checked = buttonProperties.useIcon,
@@ -234,7 +236,7 @@ fun ButtonPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Button Color") },
+            headlineContent = { Text(text = stringResource(R.string.button_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -251,7 +253,7 @@ fun ButtonPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Text Color") },
+            headlineContent = { Text(text = stringResource(R.string.text_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -303,7 +305,7 @@ fun ButtonPropertiesEditor(
                         .clickable {
                             showIconPicker = !showIconPicker
                         },
-                    headlineContent = { Text(text = "Icon") },
+                    headlineContent = { Text(text = stringResource(R.string.icon_label)) },
                     trailingContent = {
                         Icon(
                             modifier = Modifier.size(20.dp),
@@ -319,7 +321,7 @@ fun ButtonPropertiesEditor(
 
                 ListItem(
                     modifier = Modifier.fillMaxWidth(0.7f),
-                    headlineContent = { Text(text = "Icon Color") },
+                    headlineContent = { Text(text = stringResource(R.string.icon_color)) },
                     trailingContent = {
                         Box(
                             Modifier

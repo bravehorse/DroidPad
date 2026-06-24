@@ -59,6 +59,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -130,7 +132,7 @@ fun JoyStickPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Show Coordinates") },
+            headlineContent = { Text(text = stringResource(R.string.show_coordinates)) },
             trailingContent = {
                 Switch(
                     checked = joyStickProperties.showCoordinates,
@@ -146,7 +148,7 @@ fun JoyStickPropertiesEditor(
         AnimatedVisibility(joyStickProperties.showCoordinates) {
             ListItem(
                 modifier = Modifier.fillMaxWidth(0.7f),
-                headlineContent = { Text(text = "Show Values") },
+                headlineContent = { Text(text = stringResource(R.string.show_values)) },
                 trailingContent = {
                     Switch(
                         checked = joyStickProperties.showValues,
@@ -177,7 +179,7 @@ fun JoyStickPropertiesEditor(
                     val tooltipState = rememberTooltipState()
                     val scope = rememberCoroutineScope()
 
-                    Text(text = "Handle Radius Factor")
+                    Text(text = stringResource(R.string.handle_radius_factor))
 
                     Spacer(modifier = Modifier.width(8.dp))
 
@@ -185,7 +187,7 @@ fun JoyStickPropertiesEditor(
                         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
                             TooltipAnchorPosition.Above ),
                         tooltip = {
-                            Text(text = "Ratio of handle radius to joystick radius\n Min:0.4 Max:0.9")
+                            Text(text = stringResource(R.string.handle_radius_factor_desc))
                         },
                         state = tooltipState,
                     ) {
@@ -209,7 +211,7 @@ fun JoyStickPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Handle Color") },
+            headlineContent = { Text(text = stringResource(R.string.handle_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -226,7 +228,7 @@ fun JoyStickPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Background Color") },
+            headlineContent = { Text(text = stringResource(R.string.background_color)) },
             trailingContent = {
                 Box(
                     Modifier

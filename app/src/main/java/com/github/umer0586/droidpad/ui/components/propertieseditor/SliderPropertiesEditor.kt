@@ -50,6 +50,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.github.umer0586.droidpad.data.SliderProperties
@@ -101,13 +103,13 @@ fun SliderPropertiesEditor(
         )
 
         if(minGreaterThanMaxError){
-            Text(text = "Min should be less than Max")
+            Text(text = stringResource(R.string.min_less_than_max))
         }
 
         OutlinedTextField(
             modifier = Modifier.testTag("sliderMinValueTextField"),
             singleLine = true,
-            prefix = { Text("Min") },
+            prefix = { Text(stringResource(R.string.min_value)) },
             value = minValue,
             isError = minValue.toFloatOrNull() == null,
             onValueChange = { minValue = it },
@@ -118,7 +120,7 @@ fun SliderPropertiesEditor(
         OutlinedTextField(
             modifier = Modifier.testTag("sliderMaxValueTextField"),
             singleLine = true,
-            prefix = { Text("Max") },
+            prefix = { Text(stringResource(R.string.max_value)) },
             value = maxValue,
             isError = maxValue.toFloatOrNull() == null,
             onValueChange = { maxValue = it },
@@ -129,7 +131,7 @@ fun SliderPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Show Value") },
+            headlineContent = { Text(text = stringResource(R.string.show_value)) },
             trailingContent = {
                 Switch(
                     checked = sliderProperties.showValue,
@@ -178,7 +180,7 @@ fun SliderPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Thumb Color") },
+            headlineContent = { Text(text = stringResource(R.string.thumb_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -194,7 +196,7 @@ fun SliderPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Track Color") },
+            headlineContent = { Text(text = stringResource(R.string.track_color)) },
             trailingContent = {
                 Box(
                     Modifier

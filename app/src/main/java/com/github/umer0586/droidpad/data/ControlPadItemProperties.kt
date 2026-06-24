@@ -55,7 +55,14 @@ data class SwitchProperties(
 
 
 enum class ButtonShape{
-    CIRCLE,SQUARE
+    CIRCLE,SQUARE;
+
+    fun getDisplayNameRes(): Int {
+        return when (this) {
+            CIRCLE -> R.string.circle
+            SQUARE -> R.string.square
+        }
+    }
 }
 @Serializable
 data class ButtonProperties(
@@ -77,7 +84,15 @@ data class ButtonProperties(
 }
 
 enum class DPadStyle{
-    CIRCULAR,CROSS,SPLIT
+    CIRCULAR,CROSS,SPLIT;
+
+    fun getDisplayNameRes(): Int {
+        return when (this) {
+            CIRCULAR -> R.string.circular
+            CROSS -> R.string.cross
+            SPLIT -> R.string.split
+        }
+    }
 }
 @Serializable
 data class DpadProperties(

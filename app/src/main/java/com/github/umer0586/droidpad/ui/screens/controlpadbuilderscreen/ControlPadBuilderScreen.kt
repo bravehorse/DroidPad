@@ -768,7 +768,7 @@ fun ControlPadBuilderScreenContent(
                 AlertDialog(
                     onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest) },
                     title = { Text(text = stringResource(R.string.delete_item_confirm)) },
-                    text = { Text(text = stringResource(R.string.item_will_be_removed, uiState.itemToBeDeleted.itemType.name)) },
+                    text = { Text(text = stringResource(R.string.item_will_be_removed, stringResource(uiState.itemToBeDeleted.itemType.getDisplayNameRes()))) },
                     confirmButton = {
                         TextButton(
                             onClick = {
@@ -866,7 +866,7 @@ private fun ItemSelectionBottomSheetContent(
                 Spacer(Modifier.width(10.dp))
                 Text(
                     modifier = Modifier.weight(0.3f),
-                    text = item.name.replace("_", " ")
+                    text = stringResource(item.getDisplayNameRes())
                 )
 
             }

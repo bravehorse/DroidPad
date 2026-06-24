@@ -43,6 +43,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -90,7 +92,7 @@ fun SteeringWheelPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Color") },
+            headlineContent = { Text(text = stringResource(R.string.color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -106,7 +108,7 @@ fun SteeringWheelPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Free Rotation") },
+            headlineContent = { Text(text = stringResource(R.string.free_rotation)) },
             trailingContent = {
                 Switch(
                     checked = steeringWheelProperties.freeRotation,
@@ -133,7 +135,7 @@ fun SteeringWheelPropertiesEditor(
                         valueRange = 45f..360f,
                     )
                 },
-                overlineContent = { Text("Max Angle") },
+                overlineContent = { Text(stringResource(R.string.max_angle)) },
                 supportingContent = {
                     Text(steeringWheelProperties.maxAngle.toString())
 
@@ -143,7 +145,7 @@ fun SteeringWheelPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Self Centering") },
+            headlineContent = { Text(text = stringResource(R.string.self_centering)) },
             trailingContent = {
                 Switch(
                     checked = steeringWheelProperties.selfCentering,
@@ -158,8 +160,8 @@ fun SteeringWheelPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Multi Touch") },
-            supportingContent = { Text("Use two fingers to rotate") },
+            headlineContent = { Text(text = stringResource(R.string.multi_touch)) },
+            supportingContent = { Text(stringResource(R.string.multi_touch_desc)) },
             trailingContent = {
                 Switch(
                     checked = steeringWheelProperties.multiTouch,

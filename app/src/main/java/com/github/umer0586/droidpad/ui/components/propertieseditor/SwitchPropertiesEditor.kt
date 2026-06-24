@@ -42,6 +42,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -108,7 +110,7 @@ fun SwitchPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Thumb Color") },
+            headlineContent = { Text(text = stringResource(R.string.thumb_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -125,7 +127,7 @@ fun SwitchPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Track Color") },
+            headlineContent = { Text(text = stringResource(R.string.track_color)) },
             trailingContent = {
                 Box(
                     Modifier

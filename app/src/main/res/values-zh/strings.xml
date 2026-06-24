@@ -144,4 +144,56 @@
     <string name="conn_error">错误</string>
     <string name="conn_timeout">超时</string>
     <string name="conn_auth_failed">认证失败</string>
+
+    <!-- Item Types -->
+    <string name="item_type_switch">开关</string>
+    <string name="item_type_slider">滑块</string>
+    <string name="item_type_step_slider">分级滑块</string>
+    <string name="item_type_label">标签</string>
+    <string name="item_type_button">按钮</string>
+    <string name="item_type_dpad">方向键</string>
+    <string name="item_type_joystick">摇杆</string>
+    <string name="item_type_steering_wheel">方向盘</string>
+    <string name="item_type_led">指示灯</string>
+    <string name="item_type_gauge">仪表盘</string>
+
+    <!-- Properties Editor -->
+    <string name="item_identifier">组件标识符</string>
+    <string name="label_text">标签文本</string>
+    <string name="text_color">文本颜色</string>
+    <string name="track_color">滑轨颜色</string>
+    <string name="thumb_color">滑块颜色</string>
+    <string name="button_text">按钮文本</string>
+    <string name="button_color">按钮颜色</string>
+    <string name="icon_color">图标颜色</string>
+    <string name="use_icon">使用图标</string>
+    <string name="use_click_action">使用点击操作</string>
+    <string name="shape">形状</string>
+    <string name="circle">圆形</string>
+    <string name="square">方形</string>
+    <string name="background_color">背景颜色</string>
+    <string name="style">样式</string>
+    <string name="min_value">最小值</string>
+    <string name="max_value">最大值</string>
+    <string name="show_value">显示数值</string>
+    <string name="steps">步长/级数</string>
+    <string name="handle_color">手柄颜色</string>
+    <string name="handle_radius_factor">手柄半径系数</string>
+    <string name="show_coordinates">显示坐标</string>
+    <string name="show_values">显示数值</string>
+    <string name="free_rotation">自由旋转</string>
+    <string name="max_angle">最大角度</string>
+    <string name="self_centering">自动回正</string>
+    <string name="multi_touch">多点触控</string>
+    <string name="color">颜色</string>
+    <string name="unit">单位</string>
+    <string name="needle">指针</string>
+    <string name="min_less_than_max">最小值应小于最大值</string>
+    <string name="click_action">点击操作</string>
+    <string name="icon_label">图标</string>
+    <string name="circular">圆形</string>
+    <string name="cross">十字形</string>
+    <string name="split">分离式</string>
+    <string name="handle_radius_factor_desc">手柄半径与摇杆半径的比值\n 最小值:0.4 最大值:0.9</string>
+    <string name="multi_touch_desc">使用双指进行旋转</string>
 </resources>

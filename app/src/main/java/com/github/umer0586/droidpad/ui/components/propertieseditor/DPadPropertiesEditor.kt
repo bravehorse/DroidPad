@@ -43,6 +43,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -81,18 +83,18 @@ fun DPadPropertiesEditor(
 
         EnumDropdown<DPadStyle>(
             modifier = Modifier.fillMaxWidth(0.7f),
-            label = "Style",
+            label = stringResource(R.string.style),
             selectedValue = dPadProperties.style,
+            labelMapper = { stringResource(it.getDisplayNameRes()) },
             onValueSelected = {
                 dPadProperties = dPadProperties.copy(style = it)
                 onDpadPropertiesChange?.invoke(dPadProperties)
             }
-
         )
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Click Action") },
+            headlineContent = { Text(text = stringResource(R.string.click_action)) },
             trailingContent = {
                 Switch(
                     checked = dPadProperties.useClickAction,
@@ -136,7 +138,7 @@ fun DPadPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Button Color") },
+            headlineContent = { Text(text = stringResource(R.string.button_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -153,7 +155,7 @@ fun DPadPropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = "Background Color") },
+            headlineContent = { Text(text = stringResource(R.string.background_color)) },
             trailingContent = {
                 Box(
                     Modifier

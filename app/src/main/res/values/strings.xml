@@ -144,4 +144,56 @@
     <string name="conn_error">Error</string>
     <string name="conn_timeout">Timeout</string>
     <string name="conn_auth_failed">Auth Failed</string>
+
+    <!-- Item Types -->
+    <string name="item_type_switch">Switch</string>
+    <string name="item_type_slider">Slider</string>
+    <string name="item_type_step_slider">Step Slider</string>
+    <string name="item_type_label">Label</string>
+    <string name="item_type_button">Button</string>
+    <string name="item_type_dpad">DPad</string>
+    <string name="item_type_joystick">Joystick</string>
+    <string name="item_type_steering_wheel">Steering Wheel</string>
+    <string name="item_type_led">LED</string>
+    <string name="item_type_gauge">Gauge</string>
+
+    <!-- Properties Editor -->
+    <string name="item_identifier">Item Identifier</string>
+    <string name="label_text">Label Text</string>
+    <string name="text_color">Text Color</string>
+    <string name="track_color">Track Color</string>
+    <string name="thumb_color">Thumb Color</string>
+    <string name="button_text">Button Text</string>
+    <string name="button_color">Button Color</string>
+    <string name="icon_color">Icon Color</string>
+    <string name="use_icon">Use Icon</string>
+    <string name="use_click_action">Use Click Action</string>
+    <string name="shape">Shape</string>
+    <string name="circle">Circle</string>
+    <string name="square">Square</string>
+    <string name="background_color">Background Color</string>
+    <string name="style">Style</string>
+    <string name="min_value">Min Value</string>
+    <string name="max_value">Max Value</string>
+    <string name="show_value">Show Value</string>
+    <string name="steps">Steps</string>
+    <string name="handle_color">Handle Color</string>
+    <string name="handle_radius_factor">Handle Radius Factor</string>
+    <string name="show_coordinates">Show Coordinates</string>
+    <string name="show_values">Show Values</string>
+    <string name="free_rotation">Free Rotation</string>
+    <string name="max_angle">Max Angle</string>
+    <string name="self_centering">Self Centering</string>
+    <string name="multi_touch">Multi Touch</string>
+    <string name="color">Color</string>
+    <string name="unit">Unit</string>
+    <string name="needle">Needle</string>
+    <string name="min_less_than_max">Min should be less than Max</string>
+    <string name="click_action">Click Action</string>
+    <string name="icon_label">Icon</string>
+    <string name="circular">Circular</string>
+    <string name="cross">Cross</string>
+    <string name="split">Split</string>
+    <string name="handle_radius_factor_desc">Ratio of handle radius to joystick radius\n Min:0.4 Max:0.9</string>
+    <string name="multi_touch_desc">Use two fingers to rotate</string>
 </resources>

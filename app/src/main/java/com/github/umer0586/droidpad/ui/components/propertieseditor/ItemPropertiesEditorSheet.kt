@@ -49,6 +49,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.github.umer0586.droidpad.R
 import com.github.umer0586.droidpad.data.database.entities.ControlPadItem
 import com.github.umer0586.droidpad.data.database.entities.ItemType
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
@@ -96,7 +98,7 @@ fun ItemPropertiesEditorSheet(
                     modifiedControlPadItem = modifiedControlPadItem.copy(itemIdentifier = it)
                 }
             },
-            label = { Text("Item Identifier") },
+            label = { Text(stringResource(R.string.item_identifier)) },
             shape = RoundedCornerShape(50.dp)
         )
 
@@ -229,7 +231,7 @@ fun ItemPropertiesEditorSheet(
             },
             contentPadding = PaddingValues(16.dp),
             content = {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         )
 

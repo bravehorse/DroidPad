@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.github.umer0586.droidpad.R
 import kotlinx.serialization.Serializable
 
 enum class ItemType{
@@ -35,7 +36,22 @@ enum class ItemType{
     DPAD,
     STEERING_WHEEL,
     LED,
-    GAUGE
+    GAUGE;
+
+    fun getDisplayNameRes(): Int {
+        return when (this) {
+            SWITCH -> R.string.item_type_switch
+            SLIDER -> R.string.item_type_slider
+            STEP_SLIDER -> R.string.item_type_step_slider
+            LABEL -> R.string.item_type_label
+            JOYSTICK -> R.string.item_type_joystick
+            BUTTON -> R.string.item_type_button
+            DPAD -> R.string.item_type_dpad
+            STEERING_WHEEL -> R.string.item_type_steering_wheel
+            LED -> R.string.item_type_led
+            GAUGE -> R.string.item_type_gauge
+        }
+    }
 }
 
 @Serializable
