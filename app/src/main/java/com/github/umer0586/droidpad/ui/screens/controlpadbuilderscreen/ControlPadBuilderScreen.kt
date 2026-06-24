@@ -771,7 +771,11 @@ fun ControlPadBuilderScreenContent(
                 AlertDialog(
                     onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnDeleteConfirmationDismissRequest) },
                     title = { Text(text = stringResource(R.string.delete_item_confirm)) },
-                    text = { Text(text = stringResource(R.string.item_will_be_removed, stringResource(uiState.itemToBeDeleted.itemType.getDisplayNameRes()))) },
+                    text = {
+                        val item = uiState.itemToBeDeleted!!
+                        val typeName = stringResource(item.itemType.getDisplayNameRes())
+                        Text(text = stringResource(R.string.item_will_be_removed, "${item.itemIdentifier} ($typeName)"))
+                    },
                     confirmButton = {
                         TextButton(
                             onClick = {
