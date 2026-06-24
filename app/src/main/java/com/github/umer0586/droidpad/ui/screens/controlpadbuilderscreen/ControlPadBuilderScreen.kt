@@ -48,6 +48,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -77,6 +78,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -800,18 +803,49 @@ fun ControlPadBuilderScreenContent(
                         tonalElevation = 4.dp
                     ) {
                         Column(
-                            modifier = Modifier.padding(12.dp),
+                            modifier = Modifier.padding(8.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 text = stringResource(R.string.scale_item, selectedItem.itemIdentifier, selectedItem.scale),
                                 style = MaterialTheme.typography.labelMedium
                             )
-                            Slider(
-                                value = selectedItem.scale,
-                                onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnItemScaleChange(selectedItem.id, it)) },
-                                valueRange = 0.25f..6f
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        val rotationStep = 360f / uiState.angleSnapDivision
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnItemRotationChange(selectedItem.id, selectedItem.rotation - rotationStep))
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = "Rotate Left",
+                                        modifier = Modifier.scale(scaleX = -1f, scaleY = 1f)
+                                    )
+                                }
+
+                                Slider(
+                                    modifier = Modifier.weight(1f).height(24.dp),
+                                    value = selectedItem.scale,
+                                    onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnItemScaleChange(selectedItem.id, it)) },
+                                    valueRange = 0.25f..3f
+                                )
+
+                                IconButton(
+                                    onClick = {
+                                        val rotationStep = 360f / uiState.angleSnapDivision
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnItemRotationChange(selectedItem.id, selectedItem.rotation + rotationStep))
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = "Rotate Right"
+                                    )
+                                }
+                            }
                         }
                     }
                 }

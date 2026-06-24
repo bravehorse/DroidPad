@@ -88,6 +88,7 @@ sealed interface ControlPadBuilderScreenEvent {
     data class OnBoundaryMarginChange(val margin: Float) : ControlPadBuilderScreenEvent
     data class OnItemSelect(val id: Long?) : ControlPadBuilderScreenEvent
     data class OnItemScaleChange(val id: Long, val scale: Float) : ControlPadBuilderScreenEvent
+    data class OnItemRotationChange(val id: Long, val rotation: Float) : ControlPadBuilderScreenEvent
     data object OnDeleteItemConfirm: ControlPadBuilderScreenEvent
     data object OnDeleteConfirmationDismissRequest: ControlPadBuilderScreenEvent
     data class OnShowControlsChange(val showControls: Boolean) : ControlPadBuilderScreenEvent
@@ -164,6 +165,10 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                     uiState.value.controlPadItems.add(item)
                     uiState.value.transformableStatesMap[item.id] =
                         TransformableState { _, offsetChange, _ ->
+
+                            if (_uiState.value.selectedItemId != item.id) {
+                                _uiState.update { it.copy(selectedItemId = item.id) }
+                            }
 
                             val index = uiState.value.controlPadItems.indexOfFirst { it.id == item.id }
                             if (index == -1) return@TransformableState
@@ -306,6 +311,10 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
 
                             uiState.value.transformableStatesMap[newItem.id] =
                                 TransformableState { _, offsetChange, _ ->
+                                    if (_uiState.value.selectedItemId != newItem.id) {
+                                        _uiState.update { it.copy(selectedItemId = newItem.id) }
+                                    }
+
                                     val index = uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
                                     if (index == -1) return@TransformableState
                                     val controlPadItem = uiState.value.controlPadItems[index]
@@ -423,6 +432,15 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 if (index != -1) {
                     val item = _uiState.value.controlPadItems[index]
                     _uiState.value.controlPadItems[index] = item.copy(scale = snappedScale(event.scale))
+                    _uiState.update { it.copy(isModified = true) }
+                }
+            }
+
+            is ControlPadBuilderScreenEvent.OnItemRotationChange -> {
+                val index = _uiState.value.controlPadItems.indexOfFirst { it.id == event.id }
+                if (index != -1) {
+                    val item = _uiState.value.controlPadItems[index]
+                    _uiState.value.controlPadItems[index] = item.copy(rotation = event.rotation)
                     _uiState.update { it.copy(isModified = true) }
                 }
             }
