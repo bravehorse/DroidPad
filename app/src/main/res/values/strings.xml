@@ -196,4 +196,5 @@
     <string name="split">Split</string>
     <string name="handle_radius_factor_desc">Ratio of handle radius to joystick radius\n Min:0.4 Max:0.9</string>
     <string name="multi_touch_desc">Use two fingers to rotate</string>
+    <string name="indicator_color">Indicator Color</string>
 </resources>

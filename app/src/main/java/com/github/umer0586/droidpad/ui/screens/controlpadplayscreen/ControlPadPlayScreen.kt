@@ -340,7 +340,7 @@ fun ControlPlayScreenContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(uiState.controlPadBackgroundColor.toULong()))
+                .background(Color(uiState.controlPadBackgroundColor))
                 .padding(innerPadding)
         ){
             val baseUnit = uiState.baseUnit.dp

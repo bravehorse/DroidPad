@@ -37,15 +37,15 @@ fun Gauge(
     maxValue: Float = 50f,
     unit: String = "Km/h",
     needle: Boolean = true,
-    color: Color =  Color(0xFF4D4D3E),
+    color: Color = Color(0xFF4D4D3E),
+    indicatorColor: Color = Color(0xFFC3CFD9),
 ) {
     val barWidth = 10.dp
 
     val currentValue by animateFloatAsState(
-        targetValue = value.coerceIn(minValue,maxValue),
+        targetValue = value.coerceIn(minValue, maxValue),
         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)
     )
-
 
     PointerSpeedometer(
         modifier = modifier,
@@ -55,35 +55,37 @@ fun Gauge(
         barWidth = barWidth,
         unitUnderSpeed = true,
         backgroundCircleColor = color,
-        barColor = color.opposite,
+        barColor = indicatorColor,
         marksColor = color.contrast,
-        speedUnitAlignment = if(needle) Alignment.BottomCenter else Alignment.Center,
+        speedUnitAlignment = if (needle) Alignment.BottomCenter else Alignment.Center,
         speedText = {
             BasicText(
                 text = currentValue.toInt().toString(),
-                style = MaterialTheme.typography.displayMedium.copy(color = color.contrast),
+                style = (if (needle) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.displayMedium).copy(
+                    color = color.contrast
+                ),
                 autoSize = TextAutoSize.StepBased(
                     minFontSize = MaterialTheme.typography.labelLarge.fontSize,
-                    maxFontSize = MaterialTheme.typography.displayMedium.fontSize,
+                    maxFontSize = (if (needle) MaterialTheme.typography.headlineMedium else MaterialTheme.typography.displayMedium).fontSize,
                 )
             )
         },
         unitText = {
             Text(
                 text = unit,
-                color = color.contrast
+                color = color.contrast,
+                style = if (needle) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodyMedium
             )
         },
         indicator = {
             if (needle) {
                 SpindleIndicator(
-                    color = color.opposite
+                    color = indicatorColor
                 )
-            }
-            else {
+            } else {
                 TriangleIndicator(
                     modifier = Modifier.padding(top = 20.dp),
-                    color = color.opposite
+                    color = indicatorColor
                 )
             }
             // Circular point on bar
@@ -91,14 +93,14 @@ fun Gauge(
                 pointRadius = barWidth * .5f + 1.dp,
                 backPointRadius = barWidth * .5f + 8.dp,
                 centerY = barWidth * .5f,
-                color = color.opposite
+                color = indicatorColor
             )
         },
         centerContent = {
-            if(needle){
+            if (needle) {
                 SvCenterCircle(
-                    size = 24.dp,
-                    color = color.opposite
+                    size = 16.dp,
+                    color = indicatorColor
                 )
             }
         },
@@ -108,7 +110,7 @@ fun Gauge(
                 color = color.contrast
             )
         },
-        ticks = getTicks(minValue,maxValue, divisions = 5)
+        ticks = getTicks(minValue, maxValue, divisions = 5)
 
     )
 }

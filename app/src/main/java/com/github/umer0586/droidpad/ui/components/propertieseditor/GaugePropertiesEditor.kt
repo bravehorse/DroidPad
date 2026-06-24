@@ -125,6 +125,7 @@ fun GaugePropertiesEditor(
         )
 
         var showColorPicker by remember { mutableStateOf(false) }
+        var showIndicatorColorPicker by remember { mutableStateOf(false) }
 
         AnimatedVisibility(showColorPicker) {
             ColorPickerWithHex(
@@ -132,6 +133,18 @@ fun GaugePropertiesEditor(
                 onColorChanged = { color ->
                     gaugeProperties = gaugeProperties.copy(
                         color = color.value
+                    )
+                    onGaugePropertiesChange?.invoke(gaugeProperties)
+                }
+            )
+        }
+
+        AnimatedVisibility(showIndicatorColorPicker) {
+            ColorPickerWithHex(
+                initialColor = Color(gaugeProperties.indicatorColor),
+                onColorChanged = { color ->
+                    gaugeProperties = gaugeProperties.copy(
+                        indicatorColor = color.value
                     )
                     onGaugePropertiesChange?.invoke(gaugeProperties)
                 }
@@ -154,7 +167,7 @@ fun GaugePropertiesEditor(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = stringResource(R.string.color)) },
+            headlineContent = { Text(text = stringResource(R.string.background_color)) },
             trailingContent = {
                 Box(
                     Modifier
@@ -163,6 +176,23 @@ fun GaugePropertiesEditor(
                         .background(Color(gaugeProperties.color))
                         .clickable {
                             showColorPicker = !showColorPicker
+                            showIndicatorColorPicker = false
+                        })
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.indicator_color)) },
+            trailingContent = {
+                Box(
+                    Modifier
+                        .size(20.dp)
+                        .clip(CircleShape)
+                        .background(Color(gaugeProperties.indicatorColor))
+                        .clickable {
+                            showIndicatorColorPicker = !showIndicatorColorPicker
+                            showColorPicker = false
                         })
             }
         )

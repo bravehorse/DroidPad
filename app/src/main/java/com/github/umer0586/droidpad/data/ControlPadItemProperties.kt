@@ -17,22 +17,28 @@
  *
  */
 
+@file:UseSerializers(ColorSerializer::class)
+
 package com.github.umer0586.droidpad.data
 
 
 import androidx.compose.ui.graphics.Color
 import com.github.umer0586.droidpad.R
+import com.github.umer0586.droidpad.data.util.ColorSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.json.Json
 
 private val JsonCon = Json {
     ignoreUnknownKeys = true
+    encodeDefaults = true
 }
 
 
 @Serializable
 data class LabelProperties(
     val text: String = "label",
+    @Serializable(with = ColorSerializer::class)
     val color: ULong = Color.White.value
 ){
 
@@ -44,7 +50,9 @@ data class LabelProperties(
 
 @Serializable
 data class SwitchProperties(
+    @Serializable(with = ColorSerializer::class)
     val trackColor: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
     val thumbColor: ULong = Color(0xFF393000).value
 ){
     fun toJson() = JsonCon.encodeToString(this)
@@ -67,11 +75,14 @@ enum class ButtonShape{
 @Serializable
 data class ButtonProperties(
     val text: String = "Btn",
+    @Serializable(with = ColorSerializer::class)
     val textColor: ULong = Color(0xFF393000).value,
+    @Serializable(with = ColorSerializer::class)
     val buttonColor: ULong = Color(0xFFDBC66E).value,
     val useIcon: Boolean = false,
     val useClickAction: Boolean = false,
     val iconId: Int = 0,
+    @Serializable(with = ColorSerializer::class)
     val iconColor: ULong = Color(0xFF393000).value,
     val shape: ButtonShape = ButtonShape.SQUARE
 ){
@@ -96,7 +107,9 @@ enum class DPadStyle{
 }
 @Serializable
 data class DpadProperties(
+    @Serializable(with = ColorSerializer::class)
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
     val buttonColor: ULong = Color(0xFF393000).value,
     val useClickAction: Boolean = false,
     val style: DPadStyle = DPadStyle.CIRCULAR
@@ -113,7 +126,9 @@ data class SliderProperties(
     val minValue: Float = 0f,
     val maxValue: Float = 10f,
     val showValue: Boolean = false,
+    @Serializable(with = ColorSerializer::class)
     val thumbColor: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
     val trackColor: ULong = Color(0xFFDBC66E).value
 ){
     fun toJson() = JsonCon.encodeToString(this)
@@ -130,7 +145,9 @@ data class StepSliderProperties(
     val maxValue: Float = 10f,
     val showValue: Boolean = false,
     val steps: Int = 1,
+    @Serializable(with = ColorSerializer::class)
     val thumbColor: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
     val trackColor: ULong = Color(0xFFDBC66E).value
 ){
     fun toJson() = JsonCon.encodeToString(this)
@@ -143,7 +160,9 @@ data class StepSliderProperties(
 
 @Serializable
 data class JoyStickProperties(
+    @Serializable(with = ColorSerializer::class)
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
     val handleColor: ULong = Color(0xFF393000).value,
     val handleRadiusFactor: Float = 0.4f,
     val showCoordinates: Boolean = false,
@@ -157,6 +176,7 @@ data class JoyStickProperties(
 
 @Serializable
 data class SteeringWheelProperties(
+    @Serializable(with = ColorSerializer::class)
     val color: ULong = Color(0xFFDBC66E).value,
     val freeRotation: Boolean = false,
     val maxAngle: Int = 360,
@@ -171,6 +191,7 @@ data class SteeringWheelProperties(
 
 @Serializable
 data class LEDProperties(
+    @Serializable(with = ColorSerializer::class)
     val color: ULong = Color(0xFFDBC66E).value
 ){
     fun toJson() = JsonCon.encodeToString(this)
@@ -181,7 +202,10 @@ data class LEDProperties(
 
 @Serializable
 data class GaugeProperties(
+    @Serializable(with = ColorSerializer::class)
     val color: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
+    val indicatorColor: ULong = Color(0xFFC3CFD9).value,
     val minValue: Float = 0f,
     val maxValue: Float = 100f,
     val unit: String = "m/s",

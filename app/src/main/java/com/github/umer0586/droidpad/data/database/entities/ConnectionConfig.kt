@@ -17,12 +17,17 @@
  *
  */
 
+@file:UseSerializers(ColorSerializer::class)
+
 package com.github.umer0586.droidpad.data.database.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.github.umer0586.droidpad.data.util.ColorSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import kotlinx.serialization.json.Json
 
 enum class ConnectionType{
     TCP,UDP,MQTT_V5,MQTT_V3,WEBSOCKET,WEBSOCKET_SERVER,BLUETOOTH_LE,BLUETOOTH

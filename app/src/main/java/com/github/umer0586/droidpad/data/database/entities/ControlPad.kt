@@ -17,12 +17,16 @@
  *
  */
 
+@file:UseSerializers(ColorSerializer::class)
+
 package com.github.umer0586.droidpad.data.database.entities
 
 import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.github.umer0586.droidpad.data.util.ColorSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.json.Json
 
 enum class Orientation{
@@ -36,7 +40,8 @@ data class ControlPad(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val orientation : Orientation,
-    val backgroundColor : Long = Color(0xFF3C3C3E).value.toLong(),
+    @Serializable(with = ColorSerializer::class)
+    val backgroundColor : ULong = Color(0xFF3C3C3E).value,
     val width: Int = 0,
     val height: Int = 0,
     val logging: Boolean = false

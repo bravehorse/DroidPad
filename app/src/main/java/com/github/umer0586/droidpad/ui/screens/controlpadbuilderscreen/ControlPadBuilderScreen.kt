@@ -299,7 +299,7 @@ fun ControlPadBuilderScreenContent(
         BoxWithConstraints(
             Modifier
                 .fillMaxSize()
-                .background(Color(controlPad.backgroundColor.toULong()))
+                .background(Color(controlPad.backgroundColor))
                 .padding(innerPadding)
                 .clipToBounds()
                 .clickable(

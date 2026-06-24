@@ -222,7 +222,7 @@ private fun SensorScreenContentPreview(modifier: Modifier = Modifier) {
         SensorScreenContent(
             controlPad = ControlPad(
                 name = "temp",
-                backgroundColor = 0,
+                backgroundColor = 0uL,
                 orientation = Orientation.PORTRAIT
             ),
           state = state,

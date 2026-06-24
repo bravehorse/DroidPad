@@ -44,7 +44,8 @@ fun ControlPadGauge(
             maxValue = properties.maxValue,
             needle = properties.needle,
             unit = properties.unit,
-            color = Color(properties.color)
+            color = Color(properties.color),
+            indicatorColor = Color(properties.indicatorColor)
         )
     }
 

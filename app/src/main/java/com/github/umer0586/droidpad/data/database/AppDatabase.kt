@@ -21,6 +21,7 @@ package com.github.umer0586.droidpad.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.github.umer0586.droidpad.data.database.dao.ConnectionConfigurationDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadDao
 import com.github.umer0586.droidpad.data.database.dao.ControlPadItemDao
@@ -33,6 +34,7 @@ import com.github.umer0586.droidpad.data.database.entities.ControlPadSensor
 @Database(
     entities = [ControlPadItem::class, ControlPad::class, ConnectionConfig::class, ControlPadSensor::class],
     version = 6)
+@TypeConverters(RoomConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun controlPadItemDao(): ControlPadItemDao
     abstract fun controlPadDao(): ControlPadDao

@@ -91,7 +91,7 @@ data class ControlPadPlayScreenState(
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
     val isConnected: Boolean = false,
-    val controlPadBackgroundColor : Long = Color.Red.value.toLong(),
+    val controlPadBackgroundColor : ULong = Color.Red.value,
     val hostAddress: String = "",
     val isBluetoothEnabled: Boolean = false,
     val keepScreenOn: Boolean = false,

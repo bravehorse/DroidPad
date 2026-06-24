@@ -17,6 +17,8 @@
  *
  */
 
+@file:UseSerializers(ColorSerializer::class)
+
 package com.github.umer0586.droidpad.data.database.entities
 
 import androidx.compose.ui.geometry.Offset
@@ -24,7 +26,9 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.github.umer0586.droidpad.R
+import com.github.umer0586.droidpad.data.util.ColorSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 
 enum class ItemType{
     SWITCH,
