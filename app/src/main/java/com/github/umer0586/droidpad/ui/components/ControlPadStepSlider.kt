@@ -96,7 +96,7 @@ fun ControlPadStepSlider(
 
             Slider(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(4.dp)
                     .fillMaxWidth(),
                 enabled = enabled,
                 steps = properties.steps,
@@ -112,7 +112,7 @@ fun ControlPadStepSlider(
                 thumb = {
                     Box(
                         modifier = Modifier
-                            .size(width = 24.dp, height = 40.dp)
+                            .size(width = 16.dp, height = 40.dp)
                             .background(
                                 color = Color(properties.thumbColor),
                                 shape = RoundedCornerShape(4.dp)
