@@ -89,6 +89,7 @@ sealed interface ControlPadBuilderScreenEvent {
     data class OnItemSelect(val id: Long?) : ControlPadBuilderScreenEvent
     data class OnItemScaleChange(val id: Long, val scale: Float) : ControlPadBuilderScreenEvent
     data class OnItemRotationChange(val id: Long, val rotation: Float) : ControlPadBuilderScreenEvent
+    data class OnItemDuplicate(val id: Long) : ControlPadBuilderScreenEvent
     data object OnDeleteItemConfirm: ControlPadBuilderScreenEvent
     data object OnDeleteConfirmationDismissRequest: ControlPadBuilderScreenEvent
     data class OnShowControlsChange(val showControls: Boolean) : ControlPadBuilderScreenEvent
@@ -304,60 +305,10 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 )
                 viewModelScope.launch {
                     controlPadItemRepository.save(newItem).also { newId ->
-                        controlPadItemRepository.getById(newId).also { newItem ->
-                            if (newItem == null) return@also
-                            uiState.value.controlPadItems.add(newItem)
-                            var rawOffset: Offset = newItem.offset
-
-                            uiState.value.transformableStatesMap[newItem.id] =
-                                TransformableState { _, offsetChange, _ ->
-                                    if (_uiState.value.selectedItemId != newItem.id) {
-                                        _uiState.update { it.copy(selectedItemId = newItem.id) }
-                                    }
-
-                                    val index = uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
-                                    if (index == -1) return@TransformableState
-                                    val controlPadItem = uiState.value.controlPadItems[index]
-
-                                    val currentScale = controlPadItem.scale
-                                    val currentRotation = controlPadItem.rotation
-
-                                    rawOffset += offsetChange.rotateBy(currentRotation) * currentScale
-
-                                    val itemSize = getItemSize(controlPadItem.itemType, _uiState.value.baseUnit)
-                                    val margin = _uiState.value.boundaryMargin
-                                    val minX = margin
-                                    val maxX = _uiState.value.boundaryWidth - (itemSize.x * currentScale) - margin
-                                    val minY = margin
-                                    val maxY = _uiState.value.boundaryHeight - (itemSize.y * currentScale) - margin
-
-                                    val constrainedOffset = Offset(
-                                        rawOffset.x.coerceIn(minX, maxX.coerceAtLeast(minX)),
-                                        rawOffset.y.coerceIn(minY, maxY.coerceAtLeast(minY))
-                                    )
-
-                                    val displayOffset = if (_uiState.value.useGridSnap) {
-                                        Offset(
-                                            snappedOffset(constrainedOffset.x),
-                                            snappedOffset(constrainedOffset.y)
-                                        )
-                                    } else {
-                                        constrainedOffset
-                                    }
-
-                                    uiState.value.controlPadItems[index] =
-                                        controlPadItem.copy(
-                                            offsetX = displayOffset.x,
-                                            offsetY = displayOffset.y
-                                        )
-
-                                    if (_uiState.value.isModified != true) {
-                                        _uiState.update {
-                                            it.copy(isModified = true)
-                                        }
-                                    }
-
-                                }
+                        controlPadItemRepository.getById(newId).also { savedItem ->
+                            if (savedItem == null) return@also
+                            uiState.value.controlPadItems.add(savedItem)
+                            setupTransformableState(savedItem)
                         }
                     }
 
@@ -445,6 +396,31 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 }
             }
 
+            is ControlPadBuilderScreenEvent.OnItemDuplicate -> {
+                val index = _uiState.value.controlPadItems.indexOfFirst { it.id == event.id }
+                if (index != -1) {
+                    val originalItem = _uiState.value.controlPadItems[index]
+                    val newItem = originalItem.copy(
+                        id = 0, // Let Room generate a new ID
+                        itemIdentifier = "${originalItem.itemIdentifier}_copy",
+                        offsetX = originalItem.offsetX + 20f,
+                        offsetY = originalItem.offsetY + 20f
+                    )
+                    viewModelScope.launch {
+                        controlPadItemRepository.save(newItem).also { newId ->
+                            controlPadItemRepository.getById(newId).also { savedItem ->
+                                if (savedItem != null) {
+                                    uiState.value.controlPadItems.add(savedItem)
+                                    // Initialize transformable state for the new item
+                                    setupTransformableState(savedItem)
+                                    _uiState.update { it.copy(selectedItemId = savedItem.id, isModified = true) }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             is ControlPadBuilderScreenEvent.OnShowControlsChange -> {
                 _uiState.update {
                     it.copy(showControls = event.showControls)
@@ -455,6 +431,59 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
             ControlPadBuilderScreenEvent.OnBackPress -> {}
             ControlPadBuilderScreenEvent.OnTempOpenCompleted -> {}
         }
+    }
+
+    private fun setupTransformableState(newItem: ControlPadItem) {
+        var rawOffset: Offset = newItem.offset
+
+        uiState.value.transformableStatesMap[newItem.id] =
+            TransformableState { _, offsetChange, _ ->
+                if (_uiState.value.selectedItemId != newItem.id) {
+                    _uiState.update { it.copy(selectedItemId = newItem.id) }
+                }
+
+                val index = uiState.value.controlPadItems.indexOfFirst { it.id == newItem.id }
+                if (index == -1) return@TransformableState
+                val controlPadItem = uiState.value.controlPadItems[index]
+
+                val currentScale = controlPadItem.scale
+                val currentRotation = controlPadItem.rotation
+
+                rawOffset += offsetChange.rotateBy(currentRotation) * currentScale
+
+                val itemSize = getItemSize(controlPadItem.itemType, _uiState.value.baseUnit)
+                val margin = _uiState.value.boundaryMargin
+                val minX = margin
+                val maxX = _uiState.value.boundaryWidth - (itemSize.x * currentScale) - margin
+                val minY = margin
+                val maxY = _uiState.value.boundaryHeight - (itemSize.y * currentScale) - margin
+
+                val constrainedOffset = Offset(
+                    rawOffset.x.coerceIn(minX, maxX.coerceAtLeast(minX)),
+                    rawOffset.y.coerceIn(minY, maxY.coerceAtLeast(minY))
+                )
+
+                val displayOffset = if (_uiState.value.useGridSnap) {
+                    Offset(
+                        snappedOffset(constrainedOffset.x),
+                        snappedOffset(constrainedOffset.y)
+                    )
+                } else {
+                    constrainedOffset
+                }
+
+                uiState.value.controlPadItems[index] =
+                    controlPadItem.copy(
+                        offsetX = displayOffset.x,
+                        offsetY = displayOffset.y
+                    )
+
+                if (_uiState.value.isModified != true) {
+                    _uiState.update {
+                        it.copy(isModified = true)
+                    }
+                }
+            }
     }
 
     private fun saveResolution(controlPad: ControlPad, builderScreenResolution: Resolution, tempOpen: Boolean){

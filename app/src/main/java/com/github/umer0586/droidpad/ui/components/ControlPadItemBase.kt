@@ -29,7 +29,6 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -79,7 +78,7 @@ fun ControlPadItemBase(
                 rotationZ = rotation,
                 translationX = offset.x,
                 translationY = offset.y,
-                transformOrigin = TransformOrigin(0f, 0f)
+                transformOrigin = TransformOrigin.Center
             )
             .then(
                 if (onSelect != null)
@@ -114,32 +113,6 @@ fun ControlPadItemBase(
 
 
         content()
-
-        if (showControls) {
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .offset(x = (-15).dp)
-                    .size(handleSize)
-                    .clickable {
-                        onEditClick?.invoke()
-                    },
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "editHandle",
-            )
-
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .offset(x = 15.dp)
-                    .size(handleSize)
-                    .clickable {
-                        onDeleteClick?.invoke()
-                    },
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "deleteHandle",
-            )
-        }
     }
 }
 

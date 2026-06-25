@@ -28,6 +28,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.TransformableState
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -38,6 +39,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,7 +49,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -69,6 +74,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -82,10 +88,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -98,6 +106,7 @@ import com.github.umer0586.droidpad.data.JoyStickProperties
 import com.github.umer0586.droidpad.data.LEDProperties
 import com.github.umer0586.droidpad.data.LabelProperties
 import com.github.umer0586.droidpad.data.Resolution
+import kotlin.math.roundToInt
 import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.StepSliderProperties
@@ -183,6 +192,11 @@ fun ControlPadBuilderScreenContent(
 ) {
 
     var showEditorAids by remember { mutableStateOf(false) }
+    var operationBarOffset by remember { mutableFloatStateOf(0f) }
+
+    LaunchedEffect(uiState.selectedItemId) {
+        operationBarOffset = 0f
+    }
 
     Scaffold(
         bottomBar = {
@@ -800,35 +814,63 @@ fun ControlPadBuilderScreenContent(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(bottom = 16.dp)
-                            .fillMaxWidth(0.8f)
+                            .offset { IntOffset(0, operationBarOffset.roundToInt()) }
+                            .pointerInput(Unit) {
+                                detectDragGestures { change, dragAmount ->
+                                    change.consume()
+                                    operationBarOffset += dragAmount.y
+                                }
+                            }
+                            .fillMaxWidth(0.9f)
                             .zIndex(10f),
                         shape = RoundedCornerShape(16.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f),
                         tonalElevation = 4.dp
                     ) {
                         Column(
-                            modifier = Modifier.padding(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            modifier = Modifier.padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Text(
-                                text = stringResource(R.string.scale_item, selectedItem.itemIdentifier, selectedItem.scale),
-                                style = MaterialTheme.typography.labelMedium
-                            )
+                            // Row 1: Edit | Identifier | Delete
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnEditItemClick(selectedItem))
+                                    }
+                                ) {
+                                    Icon(Icons.Default.Edit, contentDescription = "Edit")
+                                }
+
+                                Text(
+                                    text = selectedItem.itemIdentifier,
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+
+                                IconButton(
+                                    onClick = {
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnDeleteItemClick(selectedItem))
+                                    }
+                                ) {
+                                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                                }
+                            }
+
+                            // Row 2: Copy | Scale Slider | Rotate
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 IconButton(
                                     onClick = {
-                                        val rotationStep = 360f / uiState.angleSnapDivision
-                                        onUiEvent(ControlPadBuilderScreenEvent.OnItemRotationChange(selectedItem.id, selectedItem.rotation - rotationStep))
+                                        onUiEvent(ControlPadBuilderScreenEvent.OnItemDuplicate(selectedItem.id))
                                     }
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Refresh,
-                                        contentDescription = "Rotate Left",
-                                        modifier = Modifier.scale(scaleX = -1f, scaleY = 1f)
-                                    )
+                                    Icon(Icons.Default.ContentCopy, contentDescription = "Copy")
                                 }
 
                                 Slider(
@@ -846,7 +888,7 @@ fun ControlPadBuilderScreenContent(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Refresh,
-                                        contentDescription = "Rotate Right"
+                                        contentDescription = "Rotate"
                                     )
                                 }
                             }
