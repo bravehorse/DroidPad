@@ -1135,12 +1135,6 @@ fun EditorAidsBottomSheetContent(
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
             headlineContent = { Text(text = stringResource(R.string.enable_angle_snap)) },
-            supportingContent = {
-                Text(
-                    text = stringResource(R.string.angle_snap_desc),
-                    style = MaterialTheme.typography.labelSmall
-                )
-            },
             trailingContent = {
                 Switch(
                     checked = uiState.useAngleSnap,
@@ -1156,6 +1150,7 @@ fun EditorAidsBottomSheetContent(
                 headlineContent = {
                     Slider(
                         valueRange = 4f..36f,
+                        steps = 7,
                         value = uiState.angleSnapDivision.toFloat(),
                         onValueChange = {newValue ->
                             onUiEvent(ControlPadBuilderScreenEvent.OnAngleSnapChange(newValue))
@@ -1163,8 +1158,7 @@ fun EditorAidsBottomSheetContent(
                     )
                 },
                 supportingContent = {
-                    val angle = 360f / uiState.angleSnapDivision
-                    Text(stringResource(R.string.snap_per_angle, angle, uiState.angleSnapDivision))
+                    Text(stringResource(R.string.snap_per_angle, 360f / uiState.angleSnapDivision))
                 },
             )
 
@@ -1173,12 +1167,6 @@ fun EditorAidsBottomSheetContent(
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
             headlineContent = { Text(text = stringResource(R.string.enable_grid_snap)) },
-            supportingContent = {
-                Text(
-                    text = stringResource(R.string.grid_snap_desc),
-                    style = MaterialTheme.typography.labelSmall
-                )
-            },
             trailingContent = {
                 Switch(
                     checked = uiState.useGridSnap,
@@ -1210,51 +1198,37 @@ fun EditorAidsBottomSheetContent(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = stringResource(R.string.base_unit_size)) },
-            supportingContent = {
-                Column {
-                    Slider(
-                        valueRange = 40f..200f,
-                        value = uiState.baseUnit,
-                        onValueChange = { newValue ->
-                            onUiEvent(ControlPadBuilderScreenEvent.OnBaseUnitChange(newValue))
-                        }
-                    )
-                    Text(
-                        text = stringResource(R.string.scale_base_unit, uiState.baseUnit.toInt()),
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
-            }
-        )
-
-        ListItem(
-            modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = stringResource(R.string.boundary_margin)) },
-            supportingContent = {
-                Column {
-                    Slider(
-                        valueRange = 0f..100f,
-                        value = uiState.boundaryMargin,
-                        onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnBoundaryMarginChange(it)) }
-                    )
-                    Text(
-                        text = stringResource(R.string.margin_px, uiState.boundaryMargin.toInt()),
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
-            }
-        )
-
-        ListItem(
-            modifier = Modifier.fillMaxWidth(0.7f),
-            headlineContent = { Text(text = stringResource(R.string.show_controls)) },
-            supportingContent = {
-                Text(
-                    text = stringResource(R.string.show_item_controls),
-                    style = MaterialTheme.typography.labelSmall
+            headlineContent = {
+                Slider(
+                    valueRange = 40f..200f,
+                    value = uiState.baseUnit,
+                    onValueChange = { newValue ->
+                        onUiEvent(ControlPadBuilderScreenEvent.OnBaseUnitChange(newValue))
+                    }
                 )
             },
+            supportingContent = {
+                Text(stringResource(R.string.base_unit_size, uiState.baseUnit.toInt()))
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = {
+                Slider(
+                    valueRange = 0f..100f,
+                    value = uiState.boundaryMargin,
+                    onValueChange = { onUiEvent(ControlPadBuilderScreenEvent.OnBoundaryMarginChange(it)) }
+                )
+            },
+            supportingContent = {
+                Text(text = stringResource(R.string.boundary_margin, uiState.boundaryMargin.toInt()))
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.show_border)) },
             trailingContent = {
                 Switch(
                     checked = uiState.showControls,
