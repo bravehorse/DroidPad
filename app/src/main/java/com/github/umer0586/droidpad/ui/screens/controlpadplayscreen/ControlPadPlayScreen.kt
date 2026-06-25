@@ -424,7 +424,7 @@ fun ControlPlayScreenContent(
                     val labelProperties = LabelProperties.fromJson(controlPadItem.properties)
                     val dynamicText = uiState.labelStates[controlPadItem.id]
                     ControlPadLabel(
-                        modifier = Modifier.size(width = baseUnit, height = baseUnit / 2),
+                        modifier = Modifier.height(baseUnit / 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,

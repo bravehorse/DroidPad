@@ -473,7 +473,7 @@ fun ControlPadBuilderScreenContent(
                     )
                 } else if (controlPadItem.itemType == ItemType.LABEL && uiState.transformableStatesMap[controlPadItem.id] != null) {
                     ControlPadLabel(
-                        modifier = Modifier.size(width = baseUnit, height = baseUnit / 2),
+                        modifier = Modifier.height(baseUnit / 2),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
