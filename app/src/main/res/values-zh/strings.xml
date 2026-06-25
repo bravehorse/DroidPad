@@ -192,4 +192,5 @@
     <string name="handle_radius_factor_desc">手柄半径与摇杆半径的比值\n 最小值:0.4 最大值:0.9</string>
     <string name="multi_touch_desc">使用双指进行旋转</string>
     <string name="indicator_color">指示器颜色</string>
+    <string name="digital_font">数码管字体</string>
 </resources>

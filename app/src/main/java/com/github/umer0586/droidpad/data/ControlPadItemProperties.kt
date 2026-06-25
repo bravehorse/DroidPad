@@ -39,7 +39,8 @@ private val JsonCon = Json {
 data class LabelProperties(
     val text: String = "label",
     @Serializable(with = ColorSerializer::class)
-    val color: ULong = Color.White.value
+    val color: ULong = Color.White.value,
+    val isDigital: Boolean = false
 ){
 
     fun toJson() = JsonCon.encodeToString(this)

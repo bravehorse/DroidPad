@@ -32,6 +32,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -101,6 +102,20 @@ fun LabelPropertiesEditor(
                         .clickable {
                             showColorPicker = !showColorPicker
                         })
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.digital_font)) },
+            trailingContent = {
+                Switch(
+                    checked = labelProperties.isDigital,
+                    onCheckedChange = {
+                        labelProperties = labelProperties.copy(isDigital = it)
+                        onLabelPropertiesChange?.invoke(labelProperties)
+                    }
+                )
             }
         )
 

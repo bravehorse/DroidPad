@@ -29,9 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.umer0586.droidpad.data.LabelProperties
+import com.github.umer0586.droidpad.ui.theme.DigitalFontFamily
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 
 
@@ -66,7 +69,9 @@ fun ControlPadLabel(
             modifier = Modifier.padding(4.dp),
             maxLines = 1,
             text = properties.text,
-            color = Color(properties.color)
+            color = Color(properties.color),
+            fontSize = if (properties.isDigital) 32.sp else 16.sp,
+            fontFamily = if (properties.isDigital) DigitalFontFamily else FontFamily.Default
         )
     }
 
