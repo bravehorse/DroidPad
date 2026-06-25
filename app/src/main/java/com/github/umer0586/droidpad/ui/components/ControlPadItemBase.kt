@@ -30,10 +30,6 @@ import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
@@ -68,8 +64,6 @@ fun ControlPadItemBase(
     onDeleteClick: (() -> Unit)? = null,
     content: @Composable() (() -> Unit)
 ) {
-    val handleSize = 15.dp
-
     Box(
         modifier = modifier
             .graphicsLayer(
@@ -79,16 +73,6 @@ fun ControlPadItemBase(
                 translationX = offset.x,
                 translationY = offset.y,
                 transformOrigin = TransformOrigin.Center
-            )
-            .then(
-                if (onSelect != null)
-                    Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        onSelect.invoke()
-                    }
-                else Modifier
             )
             // add transformable to listen to multitouch transformation events
             // after offset
@@ -111,8 +95,20 @@ fun ControlPadItemBase(
 
     ) {
 
-
         content()
+
+        if (onSelect != null) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        onSelect.invoke()
+                    }
+            )
+        }
     }
 }
 
