@@ -20,6 +20,7 @@
 package com.github.umer0586.droidpad.ui.components.propertieseditor
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -61,6 +63,7 @@ fun ItemPropertiesEditorSheet(
     modifier: Modifier = Modifier,
     controlPadItem: ControlPadItem,
     onSaveSubmit: ((ControlPadItem) -> Unit)? = null,
+    onDismissRequest: (() -> Unit)? = null,
     itemIdentifierMaxLength: Int = 30,
     labelTextMaxLength: Int = 10,
     buttonTextMaxLength: Int = 8
@@ -69,6 +72,37 @@ fun ItemPropertiesEditorSheet(
 
     var modifiedControlPadItem by remember { mutableStateOf(controlPadItem.copy()) }
     var hasError by remember { mutableStateOf(false) }
+
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    val isModified = modifiedControlPadItem != controlPadItem
+
+    BackHandler(enabled = isModified) {
+        showConfirmationDialog = true
+    }
+
+    if (showConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = { showConfirmationDialog = false },
+            title = { Text(stringResource(R.string.unsaved_changes)) },
+            text = { Text(stringResource(R.string.interface_modified)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showConfirmationDialog = false
+                        onSaveSubmit?.invoke(modifiedControlPadItem)
+                    }
+                ) { Text(stringResource(R.string.save_changes)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showConfirmationDialog = false
+                        onDismissRequest?.invoke()
+                    }
+                ) { Text(stringResource(R.string.discard_changes)) }
+            }
+        )
+    }
 
     Column(
         modifier = modifier

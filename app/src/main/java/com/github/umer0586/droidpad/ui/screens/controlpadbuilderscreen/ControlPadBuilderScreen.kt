@@ -250,19 +250,14 @@ fun ControlPadBuilderScreenContent(
                 IconButton(
                     modifier = Modifier.align(Alignment.CenterStart),
                     onClick = {
-                        onUiEvent(ControlPadBuilderScreenEvent.OnAddItemClick)
+                        if (uiState.isModified) {
+                            showModificationAlert = true
+                        } else {
+                            onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                        }
                     },
                     content = {
                         Icon(
-                            modifier = Modifier.clickable {
-
-                                if (uiState.isModified) {
-                                    showModificationAlert = true
-                                    return@clickable
-                                }
-
-                                onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
-                            },
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onPrimary
@@ -799,10 +794,12 @@ fun ControlPadBuilderScreenContent(
                     onDismissRequest = { onUiEvent(ControlPadBuilderScreenEvent.OnItemEditorDismissRequest) },
                 ) {
                     ItemPropertiesEditorSheet(
-                        controlPadItem = uiState.itemToBeEdited,
+                        controlPadItem = uiState.itemToBeEdited!!,
                         onSaveSubmit = {
                             onUiEvent(ControlPadBuilderScreenEvent.OnItemEditSubmit(it))
-
+                        },
+                        onDismissRequest = {
+                            onUiEvent(ControlPadBuilderScreenEvent.OnItemEditorDismissRequest)
                         }
                     )
                 }
