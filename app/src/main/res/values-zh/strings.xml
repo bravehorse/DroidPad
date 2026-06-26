@@ -151,6 +151,7 @@
     <string name="item_type_steering_wheel">方向盘</string>
     <string name="item_type_led">指示灯</string>
     <string name="item_type_gauge">仪表盘</string>
+    <string name="item_type_value_slider">数值滑块</string>
 
     <!-- Properties Editor -->
     <string name="item_identifier">组件标识符</string>
@@ -193,4 +194,7 @@
     <string name="multi_touch_desc">使用双指进行旋转</string>
     <string name="indicator_color">指示器颜色</string>
     <string name="digital_font">数码管字体</string>
+    <string name="default_value">默认值</string>
+    <string name="value_list">值列表</string>
+    <string name="label_list">标签列表</string>
 </resources>

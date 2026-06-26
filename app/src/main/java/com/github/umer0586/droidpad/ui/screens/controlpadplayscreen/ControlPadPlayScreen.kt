@@ -96,6 +96,7 @@ import com.github.umer0586.droidpad.data.SliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelProperties
 import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SwitchProperties
+import com.github.umer0586.droidpad.data.ValueSliderProperties
 import com.github.umer0586.droidpad.data.connection.ConnectionState
 import com.github.umer0586.droidpad.data.database.entities.ConnectionType
 import com.github.umer0586.droidpad.data.database.entities.ControlPad
@@ -113,6 +114,7 @@ import com.github.umer0586.droidpad.ui.components.ControlPadLabel
 import com.github.umer0586.droidpad.ui.components.ControlPadSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSteeringWheel
 import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
+import com.github.umer0586.droidpad.ui.components.ControlPadValueSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
@@ -414,6 +416,31 @@ fun ControlPlayScreenContent(
                                     id = controlPadItem.itemIdentifier,
                                     idLong = controlPadItem.id,
                                     value = it
+                                )
+                            )
+                        }
+                    )
+                }
+
+                else if (controlPadItem.itemType == ItemType.VALUE_SLIDER) {
+
+                    val valueSliderProperties = ValueSliderProperties.fromJson(controlPadItem.properties)
+
+                    ControlPadValueSlider(
+                        modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        showControls = false,
+                        properties = valueSliderProperties,
+                        selectedIndex = uiState.valueSliderStates[controlPadItem.id] ?: 0,
+                        onValueChange = { index, value ->
+                            onUiEvent(
+                                ControlPadPlayScreenEvent.OnValueSliderValueChange(
+                                    id = controlPadItem.itemIdentifier,
+                                    idLong = controlPadItem.id,
+                                    index = index,
+                                    value = value
                                 )
                             )
                         }

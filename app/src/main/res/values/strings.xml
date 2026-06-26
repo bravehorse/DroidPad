@@ -151,6 +151,7 @@
     <string name="item_type_steering_wheel">Steering Wheel</string>
     <string name="item_type_led">LED</string>
     <string name="item_type_gauge">Gauge</string>
+    <string name="item_type_value_slider">Value Slider</string>
 
     <!-- Properties Editor -->
     <string name="item_identifier">Item Identifier</string>
@@ -193,4 +194,7 @@
     <string name="multi_touch_desc">Use two fingers to rotate</string>
     <string name="indicator_color">Indicator Color</string>
     <string name="digital_font">Digital Font</string>
+    <string name="default_value">Default Value</string>
+    <string name="value_list">Value List</string>
+    <string name="label_list">Label List</string>
 </resources>

@@ -57,6 +57,7 @@ data class ExternalData(
                     ItemType.SWITCH -> SwitchProperties.fromJson(propertiesJson).toJson()
                     ItemType.SLIDER -> SliderProperties.fromJson(propertiesJson).toJson()
                     ItemType.STEP_SLIDER -> StepSliderProperties.fromJson(propertiesJson).toJson()
+                    ItemType.VALUE_SLIDER -> ValueSliderProperties.fromJson(propertiesJson).toJson()
                     ItemType.DPAD -> DpadProperties.fromJson(propertiesJson).toJson()
                     ItemType.JOYSTICK -> JoyStickProperties.fromJson(propertiesJson).toJson()
                     ItemType.STEERING_WHEEL -> SteeringWheelProperties.fromJson(propertiesJson).toJson()

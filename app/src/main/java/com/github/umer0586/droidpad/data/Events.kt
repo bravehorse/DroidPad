@@ -32,6 +32,25 @@ data class SliderEvent(
 }
 
 @Serializable
+data class ValueSliderEvent(
+    val id: String,
+    val type: ItemType = ItemType.VALUE_SLIDER,
+    val value: String
+){
+    fun toJson(): String {
+        return JsonCon.encodeToString(this)
+    }
+    fun toCSV() = "$id,VALUE_SLIDER,$value"
+
+    companion object {
+        fun fromJson(json: String): ValueSliderEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
+}
+
+
+@Serializable
 data class SwitchEvent(
     val id: String,
     val type: ItemType = ItemType.SWITCH,

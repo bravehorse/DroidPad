@@ -40,7 +40,8 @@ enum class ItemType{
     DPAD,
     STEERING_WHEEL,
     LED,
-    GAUGE;
+    GAUGE,
+    VALUE_SLIDER;
 
     fun getDisplayNameRes(): Int {
         return when (this) {
@@ -54,6 +55,7 @@ enum class ItemType{
             STEERING_WHEEL -> R.string.item_type_steering_wheel
             LED -> R.string.item_type_led
             GAUGE -> R.string.item_type_gauge
+            VALUE_SLIDER -> R.string.item_type_value_slider
         }
     }
 }

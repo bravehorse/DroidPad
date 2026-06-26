@@ -145,7 +145,7 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
     private fun getItemSize(itemType: ItemType, baseUnit: Float): Offset {
         return when (itemType) {
             ItemType.SWITCH, ItemType.BUTTON, ItemType.LED -> Offset(baseUnit, baseUnit)
-            ItemType.SLIDER, ItemType.STEP_SLIDER -> Offset(baseUnit * 2, baseUnit)
+            ItemType.SLIDER, ItemType.STEP_SLIDER, ItemType.VALUE_SLIDER -> Offset(baseUnit * 2, baseUnit)
             ItemType.LABEL -> Offset(0f, baseUnit / 2)
             ItemType.DPAD, ItemType.JOYSTICK, ItemType.STEERING_WHEEL, ItemType.GAUGE -> Offset(baseUnit * 2, baseUnit * 2)
         }

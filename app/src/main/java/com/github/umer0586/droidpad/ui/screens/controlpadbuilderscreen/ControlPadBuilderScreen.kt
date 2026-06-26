@@ -129,6 +129,8 @@ import com.github.umer0586.droidpad.ui.components.ControlPadStepSlider
 import com.github.umer0586.droidpad.ui.components.ControlPadSwitch
 import com.github.umer0586.droidpad.ui.components.LEDSTATE
 import com.github.umer0586.droidpad.ui.components.propertieseditor.ItemPropertiesEditorSheet
+import com.github.umer0586.droidpad.data.ValueSliderProperties
+import com.github.umer0586.droidpad.ui.components.ControlPadValueSlider
 import com.github.umer0586.droidpad.ui.components.rotateBy
 import com.github.umer0586.droidpad.ui.theme.DroidPadTheme
 import com.github.umer0586.droidpad.ui.utils.LockScreenOrientation
@@ -651,6 +653,34 @@ fun ControlPadBuilderScreenContent(
                         }
 
                     )
+                } else if (controlPadItem.itemType == ItemType.VALUE_SLIDER && uiState.transformableStatesMap[controlPadItem.id] != null) {
+                    val properties = ValueSliderProperties.fromJson(controlPadItem.properties)
+                    ControlPadValueSlider(
+                        modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
+                        offset = controlPadItem.offset,
+                        rotation = controlPadItem.rotation,
+                        scale = controlPadItem.scale,
+                        transformableState = uiState.transformableStatesMap[controlPadItem.id],
+                        properties = properties,
+                        enabled = false,
+                        showControls = uiState.showControls,
+                        isSelected = uiState.selectedItemId == controlPadItem.id,
+                        onSelect = { onUiEvent(ControlPadBuilderScreenEvent.OnItemSelect(controlPadItem.id)) },
+                        onDeleteClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnDeleteItemClick(
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        },
+                        onEditClick = {
+                            onUiEvent(
+                                ControlPadBuilderScreenEvent.OnEditItemClick(
+                                    controlPadItem = controlPadItem
+                                )
+                            )
+                        }
+                    )
                 } else if (controlPadItem.itemType == ItemType.GAUGE && uiState.transformableStatesMap[controlPadItem.id] != null) {
 
                     ControlPadGauge(
@@ -716,6 +746,11 @@ fun ControlPadBuilderScreenContent(
                                 ).toJson()
 
                                 ItemType.STEP_SLIDER -> StepSliderProperties(
+                                    trackColor = primary.value,
+                                    thumbColor = primary.value,
+                                ).toJson()
+
+                                ItemType.VALUE_SLIDER -> ValueSliderProperties(
                                     trackColor = primary.value,
                                     thumbColor = primary.value,
                                 ).toJson()
@@ -934,6 +969,7 @@ private fun ItemSelectionBottomSheetContent(
                             ItemType.DPAD -> R.drawable.ic_dpad
                             ItemType.SLIDER -> R.drawable.ic_slider
                             ItemType.STEP_SLIDER -> R.drawable.ic_slider
+                            ItemType.VALUE_SLIDER -> R.drawable.ic_slider
                             ItemType.LABEL -> R.drawable.ic_label
                             ItemType.BUTTON -> R.drawable.ic_button_circle
                             ItemType.LED -> R.drawable.ic_light

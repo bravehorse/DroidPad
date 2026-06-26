@@ -153,6 +153,17 @@ fun ItemPropertiesEditorSheet(
             )
         }
 
+        else if (controlPadItem.itemType == ItemType.VALUE_SLIDER){
+            ValueSliderPropertiesEditor(
+                controlPadItem = controlPadItem,
+                onValueSliderPropertiesChange = { valueSliderProperties ->
+                    modifiedControlPadItem = modifiedControlPadItem.copy(
+                        properties = valueSliderProperties.toJson()
+                    )
+                }
+            )
+        }
+
         else if (controlPadItem.itemType == ItemType.BUTTON) {
 
             ButtonPropertiesEditor(

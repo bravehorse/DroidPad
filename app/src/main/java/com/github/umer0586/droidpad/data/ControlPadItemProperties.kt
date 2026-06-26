@@ -160,6 +160,25 @@ data class StepSliderProperties(
 
 
 @Serializable
+data class ValueSliderProperties(
+    val defaultValue: String = "0",
+    val values: String = "0,1,2,3,4,5,6,7,8,9,10",
+    val labels: String = "",
+    val showValue: Boolean = false,
+    @Serializable(with = ColorSerializer::class)
+    val thumbColor: ULong = Color(0xFFDBC66E).value,
+    @Serializable(with = ColorSerializer::class)
+    val trackColor: ULong = Color(0xFFDBC66E).value
+){
+    fun toJson() = JsonCon.encodeToString(this)
+
+    companion object {
+        fun fromJson(json: String) = JsonCon.decodeFromString<ValueSliderProperties>(json)
+    }
+}
+
+
+@Serializable
 data class JoyStickProperties(
     @Serializable(with = ColorSerializer::class)
     val backgroundColor: ULong = Color(0xFFDBC66E).value,
