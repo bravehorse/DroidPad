@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -113,10 +114,11 @@ fun ControlPadValueSlider(
                         }
                         val isCurrentSelected = index == safeSelectedIndex
                         Text(
+                            modifier = Modifier.graphicsLayer(rotationZ = -rotation),
                             text = label,
                             color = if (isCurrentSelected) Color(properties.thumbColor) else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                             fontWeight = if (isCurrentSelected) FontWeight.Bold else FontWeight.Normal,
-                            fontSize = 12.sp
+                            fontSize = 20.sp
                         )
                     }
                 }

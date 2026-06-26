@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.umer0586.droidpad.data.SliderProperties
@@ -88,7 +89,10 @@ fun ControlPadSlider(
 
             if(properties.showValue) {
                 Text(
-                    modifier = Modifier.align(Alignment.TopCenter).offset(y = (-10).dp),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .offset(y = (-10).dp)
+                        .graphicsLayer(rotationZ = -rotation),
                     text = if (value == value.toInt().toFloat()) value.toInt().toString() else "%.2f".format(value)
                 )
             }
