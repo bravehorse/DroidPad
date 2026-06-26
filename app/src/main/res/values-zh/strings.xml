@@ -197,4 +197,5 @@
     <string name="default_value">默认值</string>
     <string name="value_list">值列表</string>
     <string name="label_list">标签列表</string>
+    <string name="enabled">启用</string>
 </resources>

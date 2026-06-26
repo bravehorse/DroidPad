@@ -223,5 +223,19 @@ fun StepSliderPropertiesEditor(
             }
         )
 
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.enabled)) },
+            trailingContent = {
+                Switch(
+                    checked = stepSliderProperties.enabled,
+                    onCheckedChange = {
+                        stepSliderProperties = stepSliderProperties.copy(enabled = it)
+                        onStepSliderPropertiesChange?.invoke(stepSliderProperties)
+                    }
+                )
+            }
+        )
+
     }
 }

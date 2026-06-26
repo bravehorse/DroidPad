@@ -54,7 +54,8 @@ data class SwitchProperties(
     @Serializable(with = ColorSerializer::class)
     val trackColor: ULong = Color(0xFFDBC66E).value,
     @Serializable(with = ColorSerializer::class)
-    val thumbColor: ULong = Color(0xFF393000).value
+    val thumbColor: ULong = Color(0xFF393000).value,
+    val enabled: Boolean = true
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object {
@@ -85,7 +86,8 @@ data class ButtonProperties(
     val iconId: Int = 0,
     @Serializable(with = ColorSerializer::class)
     val iconColor: ULong = Color(0xFF393000).value,
-    val shape: ButtonShape = ButtonShape.SQUARE
+    val shape: ButtonShape = ButtonShape.SQUARE,
+    val enabled: Boolean = true
 ){
     fun toJson() = JsonCon.encodeToString(this)
     companion object{
@@ -130,7 +132,8 @@ data class SliderProperties(
     @Serializable(with = ColorSerializer::class)
     val thumbColor: ULong = Color(0xFFDBC66E).value,
     @Serializable(with = ColorSerializer::class)
-    val trackColor: ULong = Color(0xFFDBC66E).value
+    val trackColor: ULong = Color(0xFFDBC66E).value,
+    val enabled: Boolean = true
 ){
     fun toJson() = JsonCon.encodeToString(this)
 
@@ -149,7 +152,8 @@ data class StepSliderProperties(
     @Serializable(with = ColorSerializer::class)
     val thumbColor: ULong = Color(0xFFDBC66E).value,
     @Serializable(with = ColorSerializer::class)
-    val trackColor: ULong = Color(0xFFDBC66E).value
+    val trackColor: ULong = Color(0xFFDBC66E).value,
+    val enabled: Boolean = true
 ){
     fun toJson() = JsonCon.encodeToString(this)
 
@@ -162,13 +166,14 @@ data class StepSliderProperties(
 @Serializable
 data class ValueSliderProperties(
     val defaultValue: String = "0",
-    val values: String = "0,1,2,3,4,5,6,7,8,9,10",
-    val labels: String = "",
+    val values: String = "-1,0,1",
+    val labels: String = "R,N,D",
     val showValue: Boolean = false,
     @Serializable(with = ColorSerializer::class)
     val thumbColor: ULong = Color(0xFFDBC66E).value,
     @Serializable(with = ColorSerializer::class)
-    val trackColor: ULong = Color(0xFFDBC66E).value
+    val trackColor: ULong = Color(0xFFDBC66E).value,
+    val enabled: Boolean = true
 ){
     fun toJson() = JsonCon.encodeToString(this)
 

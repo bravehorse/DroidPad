@@ -322,6 +322,20 @@ fun ButtonPropertiesEditor(
                 )
             }
         }
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.enabled)) },
+            trailingContent = {
+                Switch(
+                    checked = buttonProperties.enabled,
+                    onCheckedChange = {
+                        buttonProperties = buttonProperties.copy(enabled = it)
+                        onButtonPropertiesChange?.invoke(buttonProperties)
+                    }
+                )
+            }
+        )
     }
 }
 

@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 
 private val JsonCon = Json {
     encodeDefaults = true
+    ignoreUnknownKeys = true
 }
 
 
@@ -17,12 +18,16 @@ private val JsonCon = Json {
 data class SliderEvent(
     val id: String,
     val type: ItemType = ItemType.SLIDER,
-    val value: Float
+    val value: Float? = null,
+    val minValue: Float? = null,
+    val maxValue: Float? = null,
+    val steps: Int? = null,
+    val enabled: Boolean? = null
 ){
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,SLIDER,${if (value == value.toInt().toFloat()) value.toInt().toString() else value.toString()}"
+    fun toCSV() = "$id,SLIDER,${value?.let { if (it == it.toInt().toFloat()) it.toInt().toString() else it.toString() } ?: ""}"
 
     companion object {
         fun fromJson(json: String): SliderEvent {
@@ -35,12 +40,13 @@ data class SliderEvent(
 data class ValueSliderEvent(
     val id: String,
     val type: ItemType = ItemType.VALUE_SLIDER,
-    val value: String
+    val value: String? = null,
+    val enabled: Boolean? = null
 ){
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,VALUE_SLIDER,$value"
+    fun toCSV() = "$id,VALUE_SLIDER,${value ?: ""}"
 
     companion object {
         fun fromJson(json: String): ValueSliderEvent {
@@ -54,12 +60,13 @@ data class ValueSliderEvent(
 data class SwitchEvent(
     val id: String,
     val type: ItemType = ItemType.SWITCH,
-    val state: Boolean
+    val state: Boolean? = null,
+    val enabled: Boolean? = null
 ){
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,SWITCH,$state"
+    fun toCSV() = "$id,SWITCH,${state ?: ""}"
 
     companion object {
         fun fromJson(json: String): SwitchEvent {
@@ -72,12 +79,19 @@ data class SwitchEvent(
 data class ButtonEvent(
     val id: String,
     val type: ItemType = ItemType.BUTTON,
-    val state: String
+    val state: String? = null,
+    val enabled: Boolean? = null
 ){
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,BUTTON,$state"
+    fun toCSV() = "$id,BUTTON,${state ?: ""}"
+
+    companion object {
+        fun fromJson(json: String): ButtonEvent {
+            return JsonCon.decodeFromString(json)
+        }
+    }
 }
 
 @Serializable

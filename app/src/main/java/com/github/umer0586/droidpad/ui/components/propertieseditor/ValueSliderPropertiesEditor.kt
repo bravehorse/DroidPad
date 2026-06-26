@@ -183,5 +183,19 @@ fun ValueSliderPropertiesEditor(
             }
         )
 
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.enabled)) },
+            trailingContent = {
+                Switch(
+                    checked = valueSliderProperties.enabled,
+                    onCheckedChange = {
+                        valueSliderProperties = valueSliderProperties.copy(enabled = it)
+                        onValueSliderPropertiesChange?.invoke(valueSliderProperties)
+                    }
+                )
+            }
+        )
+
     }
 }

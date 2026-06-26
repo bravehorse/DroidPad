@@ -202,5 +202,19 @@ fun SliderPropertiesEditor(
             }
         )
 
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.enabled)) },
+            trailingContent = {
+                Switch(
+                    checked = sliderProperties.enabled,
+                    onCheckedChange = {
+                        sliderProperties = sliderProperties.copy(enabled = it)
+                        onSliderPropertiesChange?.invoke(sliderProperties)
+                    }
+                )
+            }
+        )
+
     }
 }

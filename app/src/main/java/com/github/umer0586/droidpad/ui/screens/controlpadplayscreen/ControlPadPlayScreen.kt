@@ -359,6 +359,7 @@ fun ControlPlayScreenContent(
                         scale = controlPadItem.scale,
                         properties = switchProperties,
                         checked = uiState.switchStates[controlPadItem.id] ?: false,
+                        enabled = uiState.enabledStates[controlPadItem.id] ?: switchProperties.enabled,
                         showControls = false,
                         onCheckedChange = {
                             onUiEvent(
@@ -375,7 +376,7 @@ fun ControlPlayScreenContent(
 
                 else if (controlPadItem.itemType == ItemType.SLIDER) {
 
-                    val sliderProperties = SliderProperties.fromJson(controlPadItem.properties)
+                    val sliderProperties = uiState.sliderProperties[controlPadItem.id] ?: SliderProperties.fromJson(controlPadItem.properties)
                     //var value by remember { mutableFloatStateOf(sliderProperties.minValue) }
 
                     ControlPadSlider(
@@ -386,6 +387,7 @@ fun ControlPlayScreenContent(
                         showControls = false,
                         properties = sliderProperties,
                         value = uiState.sliderStates[controlPadItem.id] ?: sliderProperties.minValue,
+                        enabled = uiState.enabledStates[controlPadItem.id] ?: sliderProperties.enabled,
                         onValueChange = {
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnSliderValueChange(
@@ -400,7 +402,7 @@ fun ControlPlayScreenContent(
 
                 else if (controlPadItem.itemType == ItemType.STEP_SLIDER) {
 
-                    val stepSliderProperties = StepSliderProperties.fromJson(controlPadItem.properties)
+                    val stepSliderProperties = uiState.stepSliderProperties[controlPadItem.id] ?: StepSliderProperties.fromJson(controlPadItem.properties)
 
                     ControlPadStepSlider(
                         modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),
@@ -410,6 +412,7 @@ fun ControlPlayScreenContent(
                         showControls = false,
                         properties = stepSliderProperties,
                         value = uiState.sliderStates[controlPadItem.id] ?: stepSliderProperties.minValue,
+                        enabled = uiState.enabledStates[controlPadItem.id] ?: stepSliderProperties.enabled,
                         onValueChange = {
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnSliderValueChange(
@@ -434,6 +437,7 @@ fun ControlPlayScreenContent(
                         showControls = false,
                         properties = valueSliderProperties,
                         selectedIndex = uiState.valueSliderStates[controlPadItem.id] ?: 0,
+                        enabled = uiState.enabledStates[controlPadItem.id] ?: valueSliderProperties.enabled,
                         onValueChange = { index, value ->
                             onUiEvent(
                                 ControlPadPlayScreenEvent.OnValueSliderValueChange(
@@ -462,13 +466,16 @@ fun ControlPlayScreenContent(
 
                 else if(controlPadItem.itemType == ItemType.BUTTON){
 
+                    val buttonProperties = ButtonProperties.fromJson(controlPadItem.properties)
+
                     ControlPadButton(
                         modifier = Modifier.size(baseUnit),
                         offset = controlPadItem.offset,
                         rotation = controlPadItem.rotation,
                         scale = controlPadItem.scale,
                         showControls = false,
-                        properties = ButtonProperties.fromJson(controlPadItem.properties),
+                        properties = buttonProperties,
+                        enabled = uiState.enabledStates[controlPadItem.id] ?: buttonProperties.enabled,
                         onPressed = { onUiEvent(ControlPadPlayScreenEvent.OnButtonPress(controlPadItem.itemIdentifier)) },
                         onRelease = { onUiEvent(ControlPadPlayScreenEvent.OnButtonRelease(controlPadItem.itemIdentifier)) },
                         onClick = {onUiEvent(ControlPadPlayScreenEvent.OnButtonClick(controlPadItem.itemIdentifier))}

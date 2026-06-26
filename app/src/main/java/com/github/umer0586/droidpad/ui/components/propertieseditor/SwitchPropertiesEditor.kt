@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -129,6 +130,20 @@ fun SwitchPropertiesEditor(
                             showColorPickerForTrack = !showColorPickerForTrack
                             showColorPickerForThumb = false
                         })
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            headlineContent = { Text(text = stringResource(R.string.enabled)) },
+            trailingContent = {
+                Switch(
+                    checked = switchProperties.enabled,
+                    onCheckedChange = {
+                        switchProperties = switchProperties.copy(enabled = it)
+                        onSwitchPropertiesChange?.invoke(switchProperties)
+                    }
+                )
             }
         )
 
