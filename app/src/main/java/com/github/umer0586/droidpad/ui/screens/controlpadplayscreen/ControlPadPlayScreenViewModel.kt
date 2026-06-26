@@ -111,7 +111,7 @@ sealed interface ControlPadPlayScreenEvent {
     data object OnDisconnectClick : ControlPadPlayScreenEvent
     data class OnSwitchCheckedChange(val id: String, val idLong: Long, val checked: Boolean) : ControlPadPlayScreenEvent
     data class OnSliderValueChange(val id: String, val idLong: Long, val value: Float) : ControlPadPlayScreenEvent
-    data class OnValueSliderValueChange(val id: String, val idLong: Long, val index: Int, val value: String) : ControlPadPlayScreenEvent
+    data class OnValueSliderValueChange(val id: String, val idLong: Long, val index: Int, val value: Float) : ControlPadPlayScreenEvent
     data class OnButtonPress(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonRelease(val id: String) : ControlPadPlayScreenEvent
     data class OnButtonClick(val id: String) : ControlPadPlayScreenEvent
@@ -244,7 +244,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
             controlPadRepository.getControlPadItemsOf(controlPad)
                 .filter { it.itemType == ItemType.VALUE_SLIDER }.forEach { slider ->
                     val properties = ValueSliderProperties.fromJson(slider.properties)
-                    val valueList = properties.values.split(",").map { it.trim() }
+                    val valueList = properties.values.split(",").map { it.trim().toFloatOrNull() ?: 0f }
                     val defaultIndex = valueList.indexOf(properties.defaultValue).coerceAtLeast(0)
                     uiState.value.valueSliderStates[slider.id] = defaultIndex
                     uiState.value.enabledStates[slider.id] = properties.enabled
@@ -625,7 +625,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                 }?.also { item ->
                                     valueSliderEvent.value?.let { value ->
                                         val properties = ValueSliderProperties.fromJson(item.properties)
-                                        val valueList = properties.values.split(",").map { it.trim() }
+                                        val valueList = properties.values.split(",").map { it.trim().toFloatOrNull() ?: 0f }
                                         val index = valueList.indexOf(value)
                                         if (index != -1) {
                                             uiState.value.valueSliderStates[item.id] = index

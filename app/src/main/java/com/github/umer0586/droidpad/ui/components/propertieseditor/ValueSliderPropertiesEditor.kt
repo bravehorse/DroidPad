@@ -80,9 +80,9 @@ fun ValueSliderPropertiesEditor(
             modifier = Modifier.fillMaxWidth(0.8f),
             singleLine = true,
             label = { Text(stringResource(R.string.default_value)) },
-            value = valueSliderProperties.defaultValue,
+            value = if (valueSliderProperties.defaultValue == valueSliderProperties.defaultValue.toInt().toFloat()) valueSliderProperties.defaultValue.toInt().toString() else valueSliderProperties.defaultValue.toString(),
             onValueChange = {
-                valueSliderProperties = valueSliderProperties.copy(defaultValue = it)
+                valueSliderProperties = valueSliderProperties.copy(defaultValue = it.toFloatOrNull() ?: 0f)
                 onValueSliderPropertiesChange?.invoke(valueSliderProperties)
             },
             shape = textFieldShape

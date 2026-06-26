@@ -165,7 +165,7 @@ data class StepSliderProperties(
 
 @Serializable
 data class ValueSliderProperties(
-    val defaultValue: String = "0",
+    val defaultValue: Float = 0f,
     val values: String = "-1,0,1",
     val labels: String = "R,N,D",
     val showValue: Boolean = false,

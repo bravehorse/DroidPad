@@ -68,13 +68,13 @@ fun ControlPadValueSlider(
     onEditClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     selectedIndex: Int = 0,
-    onValueChange: ((Int, String) -> Unit)? = null,
+    onValueChange: ((Int, Float) -> Unit)? = null,
     enabled: Boolean = true,
     isSelected: Boolean = false,
     onSelect: (() -> Unit)? = null,
 ){
     val valueList = remember(properties.values) {
-        properties.values.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        properties.values.split(",").map { it.trim().toFloatOrNull() ?: 0f }
     }
     val labelList = remember(properties.labels) {
         properties.labels.split(",").map { it.trim() }
@@ -110,7 +110,7 @@ fun ControlPadValueSlider(
                         val label = if (index < labelList.size && labelList[index].isNotEmpty()) {
                             labelList[index]
                         } else {
-                            value
+                            if (value == value.toInt().toFloat()) value.toInt().toString() else value.toString()
                         }
                         val isCurrentSelected = index == safeSelectedIndex
                         Text(
@@ -178,7 +178,7 @@ private fun ControlPadValueSliderPreview(){
                 modifier = Modifier.fillMaxWidth(),
                 properties = ValueSliderProperties(
                     showValue = true,
-                    values = "Low,Medium,High",
+                    values = "0,50,100",
                     labels = "L,M,H"
                 ),
                 offset = Offset.Zero,
