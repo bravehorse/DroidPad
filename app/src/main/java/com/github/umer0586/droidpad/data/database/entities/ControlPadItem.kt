@@ -31,17 +31,17 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 
 enum class ItemType{
-    SWITCH,
-    SLIDER,
-    STEP_SLIDER,
     LABEL,
-    JOYSTICK,
     BUTTON,
-    DPAD,
-    STEERING_WHEEL,
-    LED,
+    SWITCH,
+    STEP_SLIDER,
+    VALUE_SLIDER,
     GAUGE,
-    VALUE_SLIDER;
+    LED,
+    DPAD,
+    SLIDER,
+    JOYSTICK,
+    STEERING_WHEEL;
 
     fun getDisplayNameRes(): Int {
         return when (this) {
