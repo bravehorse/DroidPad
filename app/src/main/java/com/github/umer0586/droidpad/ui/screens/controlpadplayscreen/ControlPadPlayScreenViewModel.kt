@@ -42,7 +42,6 @@ import com.github.umer0586.droidpad.data.StepSliderProperties
 import com.github.umer0586.droidpad.data.SteeringWheelEvent
 import com.github.umer0586.droidpad.data.SwitchEvent
 import com.github.umer0586.droidpad.data.SwitchProperties
-import com.github.umer0586.droidpad.data.ValueSliderEvent
 import com.github.umer0586.droidpad.data.ValueSliderProperties
 import com.github.umer0586.droidpad.data.connection.BluetoothConnection
 import com.github.umer0586.droidpad.data.connection.BluetoothLEConnection
@@ -97,6 +96,7 @@ data class ControlPadPlayScreenState(
     val enabledStates: SnapshotStateMap<Long, Boolean> = mutableStateMapOf(),
     val sliderProperties: SnapshotStateMap<Long, SliderProperties> = mutableStateMapOf(),
     val stepSliderProperties: SnapshotStateMap<Long, StepSliderProperties> = mutableStateMapOf(),
+    val valueSliderProperties: SnapshotStateMap<Long, ValueSliderProperties> = mutableStateMapOf(),
     val connectionType: ConnectionType = ConnectionType.TCP,
     val isConnecting: Boolean = false,
     val isConnected: Boolean = false,
@@ -248,6 +248,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                     val defaultIndex = valueList.indexOf(properties.defaultValue).coerceAtLeast(0)
                     uiState.value.valueSliderStates[slider.id] = defaultIndex
                     uiState.value.enabledStates[slider.id] = properties.enabled
+                    uiState.value.valueSliderProperties[slider.id] = properties
                 }
 
             controlPadRepository.getControlPadItemsOf(controlPad)
@@ -417,9 +418,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                 if (uiState.value.valueSliderStates[event.idLong] == event.index) return
 
                 val data = if((connection?.connectionType == ConnectionType.BLUETOOTH_LE || connection?.connectionType == ConnectionType.BLUETOOTH) && !sendJsonOverBluetooth)
-                    ValueSliderEvent(id = event.id, value = event.value).toCSV()
+                    SliderEvent(id = event.id, type = ItemType.VALUE_SLIDER, value = event.value).toCSV()
                 else
-                    ValueSliderEvent(id = event.id, value = event.value).toJson()
+                    SliderEvent(id = event.id, type = ItemType.VALUE_SLIDER, value = event.value).toJson()
 
                 uiState.value.valueSliderStates[event.idLong] = event.index
 
@@ -587,9 +588,9 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                     buttonEvent.enabled?.let { uiState.value.enabledStates[buttonItem.id] = it }
                                 }
                         }
-                        else if ("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "SLIDER") {
+                        else if ("type" in jsonElement.keys && (jsonElement["type"]?.jsonPrimitive?.content == "SLIDER" || jsonElement["type"]?.jsonPrimitive?.content == "VALUE_SLIDER")) {
                             val sliderEvent = SliderEvent.fromJson(jsonString)
-                            controlPadItems.filter { it.itemType == ItemType.SLIDER || it.itemType == ItemType.STEP_SLIDER }
+                            controlPadItems.filter { it.itemType == ItemType.SLIDER || it.itemType == ItemType.STEP_SLIDER || it.itemType == ItemType.VALUE_SLIDER }
                                 .find { sliderItem ->
                                     sliderItem.itemIdentifier == sliderEvent.id
                                 }?.also { sliderItem ->
@@ -603,7 +604,7 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                         uiState.value.sliderProperties[sliderItem.id] = newProps
                                         sliderEvent.value?.let { uiState.value.sliderStates[sliderItem.id] = it.coerceIn(newProps.minValue, newProps.maxValue) }
                                         sliderEvent.enabled?.let { uiState.value.enabledStates[sliderItem.id] = it }
-                                    } else {
+                                    } else if (sliderItem.itemType == ItemType.STEP_SLIDER) {
                                         val props = uiState.value.stepSliderProperties[sliderItem.id] ?: StepSliderProperties.fromJson(sliderItem.properties)
                                         val newProps = props.copy(
                                             minValue = sliderEvent.minValue ?: props.minValue,
@@ -614,24 +615,24 @@ class ControlPadPlayScreenViewModel @Inject constructor(
                                         uiState.value.stepSliderProperties[sliderItem.id] = newProps
                                         sliderEvent.value?.let { uiState.value.sliderStates[sliderItem.id] = it.coerceIn(newProps.minValue, newProps.maxValue) }
                                         sliderEvent.enabled?.let { uiState.value.enabledStates[sliderItem.id] = it }
-                                    }
-                                }
-                        }
-                        else if ("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "VALUE_SLIDER") {
-                            val valueSliderEvent = ValueSliderEvent.fromJson(jsonString)
-                            controlPadItems.filter { it.itemType == ItemType.VALUE_SLIDER }
-                                .find { item ->
-                                    item.itemIdentifier == valueSliderEvent.id
-                                }?.also { item ->
-                                    valueSliderEvent.value?.let { value ->
-                                        val properties = ValueSliderProperties.fromJson(item.properties)
-                                        val valueList = properties.values.split(",").map { it.trim().toFloatOrNull() ?: 0f }
-                                        val index = valueList.indexOf(value)
-                                        if (index != -1) {
-                                            uiState.value.valueSliderStates[item.id] = index
+                                    } else if (sliderItem.itemType == ItemType.VALUE_SLIDER) {
+                                        val props = uiState.value.valueSliderProperties[sliderItem.id] ?: ValueSliderProperties.fromJson(sliderItem.properties)
+                                        val newProps = props.copy(
+                                            values = sliderEvent.values ?: props.values,
+                                            labels = sliderEvent.labels ?: props.labels,
+                                            enabled = sliderEvent.enabled ?: props.enabled
+                                        )
+                                        uiState.value.valueSliderProperties[sliderItem.id] = newProps
+
+                                        sliderEvent.value?.let { value ->
+                                            val valueList = newProps.values.split(",").map { it.trim().toFloatOrNull() ?: 0f }
+                                            val index = valueList.indexOf(value)
+                                            if (index != -1) {
+                                                uiState.value.valueSliderStates[sliderItem.id] = index
+                                            }
                                         }
+                                        sliderEvent.enabled?.let { uiState.value.enabledStates[sliderItem.id] = it }
                                     }
-                                    valueSliderEvent.enabled?.let { uiState.value.enabledStates[item.id] = it }
                                 }
                         }
                         else if("type" in jsonElement.keys && jsonElement["type"]?.jsonPrimitive?.content == "LED"){

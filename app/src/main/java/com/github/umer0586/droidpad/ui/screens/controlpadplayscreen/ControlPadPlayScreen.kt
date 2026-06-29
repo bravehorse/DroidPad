@@ -427,7 +427,7 @@ fun ControlPlayScreenContent(
 
                 else if (controlPadItem.itemType == ItemType.VALUE_SLIDER) {
 
-                    val valueSliderProperties = ValueSliderProperties.fromJson(controlPadItem.properties)
+                    val valueSliderProperties = uiState.valueSliderProperties[controlPadItem.id] ?: ValueSliderProperties.fromJson(controlPadItem.properties)
 
                     ControlPadValueSlider(
                         modifier = Modifier.size(width = baseUnit * 2, height = baseUnit),

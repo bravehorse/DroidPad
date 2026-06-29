@@ -22,34 +22,17 @@ data class SliderEvent(
     val minValue: Float? = null,
     val maxValue: Float? = null,
     val steps: Int? = null,
+    val values: String? = null,
+    val labels: String? = null,
     val enabled: Boolean? = null
 ){
     fun toJson(): String {
         return JsonCon.encodeToString(this)
     }
-    fun toCSV() = "$id,SLIDER,${value?.let { if (it == it.toInt().toFloat()) it.toInt().toString() else it.toString() } ?: ""}"
+    fun toCSV() = "$id,$type,${value?.let { if (it == it.toInt().toFloat()) it.toInt().toString() else it.toString() } ?: ""}"
 
     companion object {
         fun fromJson(json: String): SliderEvent {
-            return JsonCon.decodeFromString(json)
-        }
-    }
-}
-
-@Serializable
-data class ValueSliderEvent(
-    val id: String,
-    val type: ItemType = ItemType.VALUE_SLIDER,
-    val value: Float? = null,
-    val enabled: Boolean? = null
-){
-    fun toJson(): String {
-        return JsonCon.encodeToString(this)
-    }
-    fun toCSV() = "$id,VALUE_SLIDER,${value?.let { if (it == it.toInt().toFloat()) it.toInt().toString() else it.toString() } ?: ""}"
-
-    companion object {
-        fun fromJson(json: String): ValueSliderEvent {
             return JsonCon.decodeFromString(json)
         }
     }
