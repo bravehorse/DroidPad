@@ -232,17 +232,17 @@ fun ControlPadBuilderScreenContent(
                             TextButton(
                                 onClick = {
                                     showModificationAlert = false
-                                    onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
+                                    onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
                                 }
-                            ) { Text(stringResource(R.string.discard_changes)) }
+                            ) { Text(stringResource(R.string.save)) }
                         },
                         dismissButton = {
                             TextButton(
                                 onClick = {
                                     showModificationAlert = false
-                                    onUiEvent(ControlPadBuilderScreenEvent.OnSaveClick)
+                                    onUiEvent(ControlPadBuilderScreenEvent.OnBackPress)
                                 }
-                            ) { Text(stringResource(R.string.save_changes)) }
+                            ) { Text(stringResource(R.string.discard_changes)) }
                         }
                     )
                 }

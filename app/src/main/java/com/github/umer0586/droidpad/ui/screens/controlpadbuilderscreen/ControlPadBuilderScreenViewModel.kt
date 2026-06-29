@@ -110,6 +110,9 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
     private val minScale = 0.25f
     private val maxScale = 6f
 
+    private var tempIdCounter = -1L
+    private val itemsToBeDeleted = mutableListOf<ControlPadItem>()
+
     init {
         Log.d(tag,"init ${hashCode()}")
         viewModelScope.launch {
@@ -155,6 +158,8 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
         _uiState.update {
             it.copy(isModified = false)
         }
+        itemsToBeDeleted.clear()
+        tempIdCounter = -1L
         viewModelScope.launch {
             Log.d(tag, "loadControlPadItemsFor: ")
             controlPadRepository.getControlPadItemsOf(controlPad).also{ items ->
@@ -237,16 +242,20 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
             }
 
             is ControlPadBuilderScreenEvent.OnDeleteItemConfirm -> {
-                viewModelScope.launch {
-                    _uiState.value.itemToBeDeleted?.also { itemToBeDeleted ->
-                        controlPadItemRepository.delete(itemToBeDeleted)
-                        _uiState.value.controlPadItems.remove(itemToBeDeleted)
-
-                        _uiState.update {
-                            it.copy(showDeleteConfirmation = false, selectedItemId = null)
-                        }
+                _uiState.value.itemToBeDeleted?.also { itemToBeDeleted ->
+                    if (itemToBeDeleted.id > 0) {
+                        itemsToBeDeleted.add(itemToBeDeleted)
                     }
+                    _uiState.value.controlPadItems.remove(itemToBeDeleted)
+                    _uiState.value.transformableStatesMap.remove(itemToBeDeleted.id)
 
+                    _uiState.update {
+                        it.copy(
+                            showDeleteConfirmation = false,
+                            selectedItemId = null,
+                            isModified = true
+                        )
+                    }
                 }
             }
 
@@ -272,21 +281,16 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
             }
             is ControlPadBuilderScreenEvent.OnItemEditSubmit -> {
 
-                _uiState.update { it.copy(showItemEditor = false) }
+                _uiState.update { it.copy(showItemEditor = false, isModified = true) }
 
-                viewModelScope.launch {
-                    // save changes to database
-                    controlPadItemRepository.update(event.controlPadItem)
-
-                    // reflect changes in state
-                    val index = uiState.value.controlPadItems.indexOfFirst { it.id == event.controlPadItem.id }
-                    if (index != -1) {
-                        val controlPadItem = uiState.value.controlPadItems[index]
-                        uiState.value.controlPadItems[index] = controlPadItem.copy(
-                            itemIdentifier = event.controlPadItem.itemIdentifier,
-                            properties = event.controlPadItem.properties
-                        )
-                    }
+                // reflect changes in state
+                val index = uiState.value.controlPadItems.indexOfFirst { it.id == event.controlPadItem.id }
+                if (index != -1) {
+                    val controlPadItem = uiState.value.controlPadItems[index]
+                    uiState.value.controlPadItems[index] = controlPadItem.copy(
+                        itemIdentifier = event.controlPadItem.itemIdentifier,
+                        properties = event.controlPadItem.properties
+                    )
                 }
             }
             ControlPadBuilderScreenEvent.OnItemEditorDismissRequest -> {
@@ -295,33 +299,37 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 }
             }
             is ControlPadBuilderScreenEvent.OnItemTypeSelected -> {
-                _uiState.update { it.copy(showItemChooser = false)  }
+                _uiState.update { it.copy(showItemChooser = false, isModified = true) }
 
                 val newItem = ControlPadItem(
+                    id = tempIdCounter--,
                     itemIdentifier = event.itemType.name.lowercase(),
                     controlPadId = event.controlPad.id,
                     itemType = event.itemType,
                     properties = event.properties
                 )
-                viewModelScope.launch {
-                    controlPadItemRepository.save(newItem).also { newId ->
-                        controlPadItemRepository.getById(newId).also { savedItem ->
-                            if (savedItem == null) return@also
-                            uiState.value.controlPadItems.add(savedItem)
-                            setupTransformableState(savedItem)
-                        }
-                    }
-
-                }
-
+                uiState.value.controlPadItems.add(newItem)
+                setupTransformableState(newItem)
 
             }
 
             is ControlPadBuilderScreenEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    _uiState.value.controlPadItems.forEach {
-                        controlPadItemRepository.update(it)
+
+                    itemsToBeDeleted.forEach {
+                        controlPadItemRepository.delete(it)
                     }
+                    itemsToBeDeleted.clear()
+
+                    _uiState.value.controlPadItems.forEach { item ->
+                        if (item.id < 0) {
+                            controlPadItemRepository.save(item.copy(id = 0))
+                        } else {
+                            controlPadItemRepository.update(item)
+                        }
+                    }
+
+                    _uiState.update { it.copy(isModified = false) }
                 }
 
             }
@@ -401,23 +409,15 @@ class ControlPadBuilderScreenViewModel @Inject constructor(
                 if (index != -1) {
                     val originalItem = _uiState.value.controlPadItems[index]
                     val newItem = originalItem.copy(
-                        id = 0, // Let Room generate a new ID
+                        id = tempIdCounter--,
                         itemIdentifier = "${originalItem.itemIdentifier}_copy",
                         offsetX = originalItem.offsetX + 20f,
                         offsetY = originalItem.offsetY + 20f
                     )
-                    viewModelScope.launch {
-                        controlPadItemRepository.save(newItem).also { newId ->
-                            controlPadItemRepository.getById(newId).also { savedItem ->
-                                if (savedItem != null) {
-                                    uiState.value.controlPadItems.add(savedItem)
-                                    // Initialize transformable state for the new item
-                                    setupTransformableState(savedItem)
-                                    _uiState.update { it.copy(selectedItemId = savedItem.id, isModified = true) }
-                                }
-                            }
-                        }
-                    }
+                    uiState.value.controlPadItems.add(newItem)
+                    // Initialize transformable state for the new item
+                    setupTransformableState(newItem)
+                    _uiState.update { it.copy(selectedItemId = newItem.id, isModified = true) }
                 }
             }
 
