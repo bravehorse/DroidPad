@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 
 
 private val JsonCon = Json {
-    encodeDefaults = true
+    encodeDefaults = false
     ignoreUnknownKeys = true
 }
 
